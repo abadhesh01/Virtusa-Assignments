@@ -1,0 +1,84 @@
+ [26] select count(*) as total_employees from employees;
+
+ [27] select sum(salary) total_amount_paid_to_employees from employees;
+
+ [28] select max(salary) as highest_salary from employees;
+
+ [29] select min(salary) as lowest_salary from employees;
+
+ [30] select avg(salary) as average_salary from employees;
+ 
+ [31] select max(salary) as highest_salary_of_clerk from employees where job_id like ('%CLERK%');
+
+ [32] select max(salary) as highest_salary_of_department20 from employees where department_id = 20;
+
+ [33] select min(salary) as lowest_salary_of_salesman from employees where job_id like ('%MAN%');
+
+ [34] select avg(salary) as avg_salary_of_manager from employees where job_id like ('%MGR%');
+
+ [35] select sum(salary) as total_salary_of_analysts_d40 from employees where job_id like ('%SA%') and department_id = 40;
+
+ [36] select (first_name || ' ' || last_name) as name from employees order by salary asc;
+
+ [37] select (first_name || ' ' || last_name) as name from employees order by salary desc;
+
+ [38] select (first_name || ' ' || last_name) as name from employees order by name asc;
+
+ [39] select employee_id, (first_name || ' ' || last_name) as employee_name, department_id, salary from (select * from (select * from employees order by salary) order by department_id) order by employee_name;
+ 
+ [40] select (first_name || ' ' || last_name) as employee_name, (salary * 12) as annual_salary from employees order by salary desc;
+
+ [41] select (first_name || ' ' || last_name) as employee_name, (salary*0.15) as hra, (salary*0.10) as da, (salary*0.05) as pf, ((salary+(salary*0.15)+(salary*0.10))-(salary*0.5)) as total_salary from employees;
+
+ [42] select department_id, count(*) as total_employees from employees group by department_id;
+
+ [43] select job_id, count(*) as total_employees from employees group by job_id;
+
+ [44] select department_id, sum(salary) as total_salary_of_department from employees group by department_id;
+
+ [45] select department_id, max(salary) as maximum_salary_of_department from employees group by department_id;
+
+ [46] select job_id, sum(salary) as total_slary from employees group by job_id;
+
+ [47] select job_id, sum(salary) as total_slary from employees group by job_id;
+
+ [48] select department_id, total_employees from (select department_id, count(*) as total_employees from employees group by department_id) where total_employees > 3;
+
+ [49] select * from (select job_id, sum(salary) as total_salary from employees group by job_id) where total_salary > 40000; 
+
+ [50] select * from (select job_id, count(*) as employee_count from employees group by job_id) where employee_count > 3;
+
+ [51] select * from employees where first_name like ('%A_b%') or last_name like ('%A_b%');
+
+ [52] select instr('Computer Maintenance Corporation', 'a') as position from dual;
+
+ [53] select job_id, replace(job_id, 'MGR', 'BOSS') replaced from employees;
+
+ [54] select (select upper(first_name || ' ' || last_name) from dual) as name from employees;
+
+ [55] select (select lower(first_name || ' ' || last_name) from dual) as name from employees;
+
+ [56] select (select initcap(first_name || ' ' || last_name) from dual) as name from employees;
+
+ [57] select length('Abadhesh Mishra') from dual;
+
+ [58] select (select length(first_name || ' ' || last_name) from dual) as name_length from employees;
+
+ [59] select (first_name || ' ' || last_name || ' ' || employee_id) from employees;
+
+ [60] select substr('oracle', 2, 3) from dual;
+
+ [61] select employee_id, (first_name || ' ' || last_name) as name, decode(department_id, 10, 'Accounting', 20, 'Research', 30, 'Sales', 40,'Operations') from employees;
+
+ [62] select to_char(sysdate, 'ddth Month day Year') from dual;
+
+ [63] select (first_name || ' ' || last_name || 'has joined the company on ' || to_char(hire_date, 'ddth Month Year')) as " " from employees;
+
+ [64] select next_day(sysdate, 'Saturday') from dual;
+
+ [65] select add_months(sysdate, 3) from dual;
+
+
+
+
+ 

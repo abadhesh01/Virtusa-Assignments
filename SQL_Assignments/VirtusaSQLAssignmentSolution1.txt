@@ -1,0 +1,59 @@
+[1] select * from employees;
+
+[2] select * from departments;
+
+[3] select (first_name || ' ' || last_name) as name, job_id from employees;
+
+[4] select (first_name || ' ' || last_name) as name, salary from employees;
+
+[5] select employee_id, salary from employees;
+
+[6] select (first_name || ' ' || last_name) as name, (salary * 12) as "annual salary" from employees;
+
+[7] select (first_name || last_name) as name from employees where department_id = 10;
+
+[8] select (first_name || last_name) as name from employees where job_id like('%CLERK%') and salary > 3000;
+
+[9] select employee_id from employees where commission_pct > 0.0
+
+[10] select employee_id, (first_name || ' ' || last_name) as name from employees where commission_pct is null;
+
+[11] select (first_name || ' ' || last_name) as name from employees where job_id like ('%CLERK%') or job_id like ('%MAN%') or job_id like ('%SA%') and salary > 3000;
+
+[12] select (first_name || ' ' || last_name) as name from employees where floor(months_between((select sysdate from dual), hire_date)/12) > 5;
+
+[13] select (first_name || ' ' || last_name) as name from employees where hire_date < to_date('90-JUN-30', 'YY-MM-DD') or hire_date > to_date('90-DEC-31', 'YY-MM-DD');
+
+[14] select sysdate from dual;
+
+[15] select * from all_users;
+
+[16] select owner, table_name from all_tables where owner = 'HR';
+
+[17] show user;
+
+[18] select (first_name || ' ' || last_name) as name from employees where (department_id = 10 or department_id = 20 or department_id = 40) or (job_id like ('%CLERK%') or job_id like ('%MAN%') or job_id like ('%SA%'));
+ 
+[19] select (first_name || ' ' || last_name) from employees where first_name like ('S%');
+
+[20] select (first_name || ' ' || last_name) as name from employees where last_name like ('%s');
+
+[21] select (first_name || ' ' || last_name) as name from employees where first_name like ('_a%');
+
+[22] select (first_name || ' ' || last_name) as name from employees where length(first_name) = 5;
+
+[23] select (first_name || ' ' || last_name) as name from employees where job_id != 'MGR';
+
+[24] select (first_name || ' ' || last_name) as name from employees where job_id not like ('%CLERK%') or job_id not like ('%MAN%') or job_id not like ('%SA%');
+
+[25] set pause on;
+     select * from employees;
+
+
+
+ 
+
+
+ 
+
+
