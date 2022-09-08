@@ -1,0 +1,65 @@
+[125] create table emp (emp_no int);
+
+[126] alter table emp add e_name varchar2(20);
+
+[127] alter table emp add primary key (emp_no);
+
+[128] alter table emp modify e_name varchar2(30);
+
+[129] alter table emp add salary number(38);
+
+[130] alter table emp add constraint check_value check (salary <= 10000);
+
+[131] alter table emp modify constraint check_value disable;
+
+[132] alter table emp add mgr number(38);
+
+[133] alter table emp add mgr number(38);
+
+[134] alter table emp add constraint f_key foreign key (mgr) references emp(emp_no);
+
+[135] alter table emp add dept_no number(38);
+
+[136] create table dept (dept_no number(38) primary key);
+      alter table emp add constraint f_key_of_dept foreign key (dept_no) references dept(dept_no);
+
+[137] Skip...
+
+[138] create table new_emp as select * from emp;
+
+[139] create table new_emp_2 (emp_no number(38), e_name varchar(30), d_name varchar(30));
+
+[140] create view employees_view as select first_name, last_name, job_id, department_id from employees;
+
+[141] delete from employees_view where job_id like ('%CLERK%');
+      rollback;
+
+[142] create view departments_view as select * from departments where department_name not like '%Sales%';
+
+[143] create or replace view departments_view as select * from departments where department_name not like '%Sales%' with read only;
+
+[144] create view employee_location_department as select e.employee_id, (e.first_name || ' ' || e.last_name) as employee_name, d.department_name, l.city from employees e join departments d on e.department_id = d.department_id join locations l on d.location_id = l.location_id;
+
+[145] create sequence sequence_emp start with 100 increment by 1;
+      create table new_emp (id NUMBER(10), name VARCHAR(30));
+
+[146] insert into new_emp values(sequence_emp.nextval,'Sam');
+      insert into new_emp values(sequence_emp.nextval,'Ram');
+
+[147] Skip...
+
+[148] conn / as sysdba
+      create user user_1 identified by password;
+      create user user_2 identified by password;
+      grant all privileges to user_1;
+      grant all privileges to user_2;
+
+[149] revoke all privileges from user_1;
+      revoke all privileges from user_2;
+
+[150] select table_name from dictionary;
+
+
+
+
+

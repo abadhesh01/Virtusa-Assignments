@@ -1,0 +1,57 @@
+[96] select d.department_id from departments d where d.department_id not in (select e.department_id from employees e where e.department_id = d.department_id);
+
+[97] select employee_id from employees where length(salary) >= 3
+
+[98] select employee_id, hire_date from employees where substr(to_char(hire_date),4,3) = 'DEC';
+
+[99] select employee_id, (first_name || ' ' || last_name) as employee_name from employees where (first_name || ' ' || last_name) like ('%A%');
+
+[100] select employee_id, hire_date, salary from employees where to_number(to_char(hire_date,'YYYY')) = (salary * 0.10);
+
+[101] select employee_id, department_id from employees where department_id in (select department_id from departments where department_name in ('Sales','Research'));
+
+[102] select employee_id, hire_date from employees where to_number(substr(to_char(hire_date),1,2)) < 15;
+
+[103] delete from employees where department_id in (select department_id from employees group by department_id having count(employee_id) < 3);
+
+[104] select d.department_name from departments d where d.department_id not in (select e.department_id from employees e where d.department_id = e.department_id);
+
+[105] select e.employee_id, e.job_id, j.job_title from employees e join jobs j on e.job_id = j.job_id where j.job_title like '%Manager%';
+
+[106] select (first_name || ' ' || last_name) as employee_name from employees where (first_name || ' ' || last_name) like ('%BLAKE%');
+
+[107] select * from employees where rownum < 11 minus (select * from employees where rownum < 10);
+
+[108] delete from employees where employee_id in (select employee_id from employees where rownum < 11 minus (select employee_id from employees where rownum < 10));
+
+[109] create table employees_copy as select * from employees;
+
+[110] Skip...
+
+[111] select (first_name || ' ' || last_name) as employee_name, reverse((first_name || ' ' || last_name)) as employee_name_in_reverse from employees;
+
+[112] select (first_name || ' ' || last_name) as employee_name from employees where to_char(hire_date, 'DD') = department_id;
+
+[113] select upper(substr(first_name,1,1) || ' ' || last_name) as Employee_Names from employees;
+
+[114] delete from employees where ((sysdate-hire_date)/365) > 2;
+
+[115] update employees set salary = salary + (salary * 0.10) where commission_pct = null;
+
+[116] update employees set commission_pct = (salary * 0.10) where commission_pct not in null;
+
+[117] select e.employee_id, (e.first_name || ' ' || e.last_name) as Employee_Name, l.city from employees e join departments D on e.department_id = d.department_id join locations l on d.location_id  = l.location_id;
+
+[118] select (e.first_name|| ' ' || e.last_name) as employee_name, d.department_name from employees e, departments d where e.department_id(+) = d.department_id;
+
+[119] select (e.first_name || ' ' || e.last_name) as employee_name, (m.first_name || ' ' || m.last_name) as manager_name from employees e, employees m where e.employee_id = m.manager_id;
+
+[120] delete from employees where rowid not in (select MIN(rowid) from employees group by employee_id);
+
+[121] select employee_id from employees where rowid in (select rowid from employees where rownum <= 7 MINUS (select rowid from employees where rownum < 5));
+
+[122] select employee_id from (select employee_id from employees order by employee_id) where rownum <= 10;
+
+[123] select salary as top_3_salary from (select salary from employees order by salary desc) where rownum <=3;
+
+[124] select (first_name || ' ' || last_name) as employee_name from employees where salary > (select max(avg(salary)) from employees group by department_id);

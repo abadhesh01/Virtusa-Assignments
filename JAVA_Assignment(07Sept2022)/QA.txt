@@ -1,0 +1,105 @@
+1. As a developer
+-> by following best practices/ coding standards
+a. easy readble[age,employyeId]
+b. easy maitainable [Maintenence]
+c. easy enhancable
+d. modifyable
+
+2. What is the source code structure of a Java program?
+
+Ans:  Step-1: Package declaration (If not default package.)
+  
+      Step-2: Import statements
+     
+      Step-3: Class declaration 
+              
+              3.1. Methods, Blocks, Constructors (Within the class)
+                 
+     
+3. How many classes can be there in a Java source file?
+
+Ans: There can be multiple classes within a single java source code file but there should be only one single public class.
+     The java source code file name and public class name should be same.
+
+4. Is the java source file name and class name must be same?
+
+Ans: The java source code file name and public class name should be same.
+
+5. Can I have main methods for every class in a file?
+
+Ans: Yes.
+
+6. Is main method compulsary for all classes in java? If the main method is not present what happens?
+
+Ans: Main method is not compulsary for all classes but the main class should be public and should contain main method to begin the execution.
+     If the main method is not present, the source code succeessfully compiles but throws error to the console during runtime saying that main method is not present.
+
+7. If a java source file contains more than one class how to compile and exectue?
+Ex : Test.java
+class A{​​ main(){​​}​​ }​​
+class B{​​ main(){​​}​​ }​​
+
+Ans: // Add the following lines of code to Test.java file.
+       
+     class A{​​ main(){​​}​​ }​​
+     class B{​​ main(){​​}​​ }​​
+
+
+     // Create a public class called "Test" same as file name "Test.java".
+     // Add a main method within the "Test" class. 
+     public class Test
+     {public static void main(String []args){}}
+
+     // Now the code will compile and execute successfully.
+
+8. How to compile a java program and execute it?
+
+Ans: Let the name of the java program file is "Hello.java".
+     
+     Step-1: Go to the loaction where "Hello.java" is present.
+     Step-2: Open Windows Power Shell.
+     Step-3: Type and execute "javac Hello.java" to compile and to generate "Hello.class" file.
+     Step-4: Type and execute "java Hello" to execute the Hello program.
+  
+9. What do you think what will be best practice to followed for a each java file?
+
+Ans: (1) Each java file should contain one class and the class should be public.
+     (2) All the fields within the class should be private for data protection.
+     (3) Getters, setters, toString() and hashCode() should be declared within all classes with public access specifier.
+     (4) Parameterized constructor should be declared if required.
+
+10. What is a .class file?
+
+Ams: The .class file contains the byte code.
+
+11. What is the environment is needed to write and execute the Java applications?
+
+Ans: Java Runtime Environment (JRE)
+
+12. What is an IDE and it's advantages?
+
+Ans: An IDE (Integradted Developement Environment) is a software that contains all the tools required for building applications.
+
+13. What is platform independence in java?
+
+Ans: The source code can be converted into byte code.
+     The byte code can be converted into respective machine code depending upon the OS and the machine instruction will be executed.
+     This is platform independence in java.
+
+14. Explain all the naming conventions in java?
+15. What are the different types of literals we can have?
+16. what is unicode character set?
+17. what are the main components of Java? and their usage.
+    
+Ans: (1) Abstraction - Hiding the unnecessary information.
+     (2) Encapsulation - Data protection.
+     (3) Inheritance - One class can override the properties of anathor class.
+     (4) Polymorphism - Method Overloading and Method Overriding.
+
+18. operators & usage?
+
+Ans: Operators are used to perform operation on fields/variables.
+
+19. Arrays in java?
+​
+Ans: An array is a container object that holds a fixed number of values of a single type.
