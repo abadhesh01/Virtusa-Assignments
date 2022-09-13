@@ -17,7 +17,7 @@ class CarNotMovingException extends Exception
 
 class Car 
 {
-	static int speed_in_kmph = 0;
+	private int speed_in_kmph;
 	
 	public void accelerate() throws TopSpeedException
 	{

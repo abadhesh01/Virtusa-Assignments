@@ -9,8 +9,8 @@ class InvalidValueException extends Exception
 
 class Bottle
 {
-  public int BOTTLE_VOLUME_IN_ML;
-  public int water_volume;
+  private int BOTTLE_VOLUME_IN_ML;
+  private int water_volume;
 
   public void setBottleVolume(int volume) throws InvalidValueException
   {
