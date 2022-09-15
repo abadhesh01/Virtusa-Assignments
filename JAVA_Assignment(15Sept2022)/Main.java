@@ -194,7 +194,57 @@ public class Main
 		//toyotaCorollaAltis.setType("Sedan");  // This will throw compile time error.
 		//toyotaCorollaAltis.setFuelType("Petrol"); // This will throw compile time error.
 		//toyotaCorollaAltis.setNumberOfSeats(5); // This will throw compile time error.
-       	System.out.println("\n" + toyotaCorollaAltis.toString() + "\n");
+       	System.out.println("\n" + toyotaCorollaAltis.toString());
 
+		try
+		{
+			Car toyotaFortuner =  (Car) (new Product()); // Successfully compiles but, throws java.lang.ClassCastException.
+			toyotaFortuner.setBrand("Toyota");
+			toyotaFortuner.setModel("Fortuner");
+			toyotaFortuner.setColour("Sky Blue");
+			toyotaFortuner.setType("SUV");
+			toyotaFortuner.setFuelType("Diesel");
+			toyotaFortuner.setNumberOfSeats(7);
+			System.out.println("\n" + toyotaFortuner.toString());
+		}
+		catch (Exception exception)
+		{
+			System.out.println("\n" + exception.getClass().getName() + "@" + exception.hashCode());
+		}
+		
+		try
+		{
+		   Product sampleProduct = new Product();
+           Car kiaSeltos = (Car) sampleProduct; // Successfully compiles but, throws java.lang.ClassCastException.	
+           kiaSeltos.setBrand("KIA");
+           kiaSeltos.setModel("Seltos");
+           kiaSeltos.setColour("Indigo");	
+           kiaSeltos.setType("Compact SUV");
+           kiaSeltos.setFuelType("Petrol");
+           kiaSeltos.setNumberOfSeats(5);
+           System.out.println("\n" + kiaSeltos.toString());		   
+		}
+        catch (Exception exception)
+		{
+			System.out.println("\n" + exception.getClass().getName() + "@" + exception.hashCode());
+		}
+		
+		try
+		{
+		   Product sampleProduct2 = new Car();
+           Car kiaSonet = (Car) sampleProduct2; 	
+           kiaSonet.setBrand("KIA");
+           kiaSonet.setModel("Sonet");
+           kiaSonet.setColour("Brown");	
+           kiaSonet.setType("Compact SUV");
+           kiaSonet.setFuelType("Petrol");
+           kiaSonet.setNumberOfSeats(5);
+           System.out.println("\n" + kiaSonet.toString() + "\n");		   
+		}
+        catch (Exception exception)
+		{
+			System.out.println("\n" + exception.getClass().getName() + "@" + exception.hashCode() + "\n");
+		}
+		
 	}
 }
