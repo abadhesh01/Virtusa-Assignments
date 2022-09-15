@@ -195,5 +195,8 @@ public class Main
 		//toyotaCorollaAltis.setFuelType("Petrol"); // This will throw compile time error.
 		//toyotaCorollaAltis.setNumberOfSeats(5); // This will throw compile time error.
        	System.out.println("\n" + toyotaCorollaAltis.toString() + "\n");
+		
+		//Car toyotaFortuner =  (Car) (new Product()); // Successfully compiles but, throws java.lang.ClassCastException.
+		
 	}
 }
