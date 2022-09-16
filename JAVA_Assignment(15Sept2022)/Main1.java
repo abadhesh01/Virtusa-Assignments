@@ -14,12 +14,12 @@ class Colour
 	public static final String BLACK_BACKGROUND = "\u001B[40m";
 }
 
-abstract class Printer
+abstract class AbstractPrinter
 {
     public abstract String print(String text, int mode, String colour);
 }
 
-class HP_Printer extends Printer
+class Printer extends AbstractPrinter
 {
 	public String print(String text, int mode, String colour)
 	{
@@ -54,75 +54,11 @@ class HP_Printer extends Printer
 	}
 }
 
-class Samsung_Printer extends Printer
-{
-	public String print(String text, int mode, String colour)
-	{
-		if(mode == 1)
-		{
-			return  "Printing \""+ text + "\" from " + getClass().getName() + " in black and white mode.";
-		}
-		
-		if(mode == 2)
-		{
-			if(colour.toLowerCase().equals("black"))
-			   return   "Printing \""+ Colour.WHITE_BACKGROUND + Colour.BLACK + text + Colour.RESET + "\" from " + getClass().getName() + " in colour mode.";
-		    else if(colour.toLowerCase().equals("red"))
-			   return   "Printing \""+ Colour.BLACK_BACKGROUND + Colour.RED + text + Colour.RESET + "\" from " + getClass().getName() + " in colour mode.";
-			else if(colour.toLowerCase().equals("green"))
-			   return   "Printing \""+ Colour.BLACK_BACKGROUND + Colour.GREEN + text + Colour.RESET + "\" from " + getClass().getName() + " in colour mode.";
-			else if(colour.toLowerCase().equals("yellow"))
-			   return   "Printing \""+ Colour.BLACK_BACKGROUND + Colour.YELLOW + text + Colour.RESET + "\" from " + getClass().getName() + " in colour mode.";
-            else if(colour.toLowerCase().equals("blue"))
-			   return   "Printing \""+ Colour.BLACK_BACKGROUND + Colour.BLUE + text + Colour.RESET + "\" from " + getClass().getName() + " in colour mode.";
-            else if(colour.toLowerCase().equals("purple"))
-			   return   "Printing \""+ Colour.BLACK_BACKGROUND + Colour.PURPLE + text + Colour.RESET + "\" from " + getClass().getName() + " in colour mode.";
-            else if(colour.toLowerCase().equals("cyan"))
-			   return   "Printing \""+ Colour.BLACK_BACKGROUND + Colour.CYAN + text + Colour.RESET + "\" from " + getClass().getName() + " in colour mode.";
-            else if(colour.toLowerCase().equals("white"))				
-			   return   "Printing \""+ Colour.BLACK_BACKGROUND + Colour.WHITE + text + Colour.RESET + "\" from " + getClass().getName() + " in colour mode.";
-		    else
-			   return "Invalid colour option selected from " + getClass().getName() + ".";
-		}
-		
-		return "Invalid printing mode selected from " + getClass().getName() + ".";
-	}
-}
+class HP_Printer extends Printer {}
 
-class Cannon_Printer extends Printer
-{
-	public String print(String text, int mode, String colour)
-	{
-		if(mode == 1)
-		{
-			return  "Printing \""+ text + "\" from " + getClass().getName() + " in black and white mode.";
-		}
-		
-		if(mode == 2)
-		{
-		    if(colour.toLowerCase().equals("black"))
-			   return   "Printing \""+ Colour.WHITE_BACKGROUND + Colour.BLACK + text + Colour.RESET + "\" from " + getClass().getName() + " in colour mode.";
-		    else if(colour.toLowerCase().equals("red"))
-			   return   "Printing \""+ Colour.BLACK_BACKGROUND + Colour.RED + text + Colour.RESET + "\" from " + getClass().getName() + " in colour mode.";
-			else if(colour.toLowerCase().equals("green"))
-			   return   "Printing \""+ Colour.BLACK_BACKGROUND + Colour.GREEN + text + Colour.RESET + "\" from " + getClass().getName() + " in colour mode.";
-			else if(colour.toLowerCase().equals("yellow"))
-			   return   "Printing \""+ Colour.BLACK_BACKGROUND + Colour.YELLOW + text + Colour.RESET + "\" from " + getClass().getName() + " in colour mode.";
-            else if(colour.toLowerCase().equals("blue"))
-			   return   "Printing \""+ Colour.BLACK_BACKGROUND + Colour.BLUE + text + Colour.RESET + "\" from " + getClass().getName() + " in colour mode.";
-            else if(colour.toLowerCase().equals("purple"))
-			   return   "Printing \""+ Colour.BLACK_BACKGROUND + Colour.PURPLE + text + Colour.RESET + "\" from " + getClass().getName() + " in colour mode.";
-            else if(colour.toLowerCase().equals("cyan"))
-			   return   "Printing \""+ Colour.BLACK_BACKGROUND + Colour.CYAN + text + Colour.RESET + "\" from " + getClass().getName() + " in colour mode.";
-            else if(colour.toLowerCase().equals("white"))				
-			   return   "Printing \""+ Colour.BLACK_BACKGROUND + Colour.WHITE + text + Colour.RESET + "\" from " + getClass().getName() + " in colour mode.";
-		    else
-			   return "Invalid colour option selected from " + getClass().getName() + ".";
-		}
-		
-		return "Invalid printing mode selected from " + getClass().getName() + ".";
-	}
-}
+class Samsung_Printer extends Printer {}
+
+class Cannon_Printer extends Printer {}
 
 class Computer
 {

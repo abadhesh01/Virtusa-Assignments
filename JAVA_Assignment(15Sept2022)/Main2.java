@@ -1,5 +1,5 @@
 
-abstract class MovieTheatre
+abstract class AbstractMovieTheatre
 {
 	private static double costINR; // Movie cost in rupees.
 	
@@ -25,9 +25,9 @@ abstract class MovieTheatre
 	public abstract void watchMovie();
 }
 
-class StageTheatre extends MovieTheatre
+class MovieTheatre extends AbstractMovieTheatre
 {
-	public void getTicket(double rate)
+		public void getTicket(double rate)
 	{
 		System.out.println("\nYour total bill for movie at \u001B[31m\"" + getClass().getName() + "\"\u001B[0m is \u001B[32mINR " + (getCost() + (getCost() * rate)) + "\u001B[0m.\n");
 	}
@@ -38,31 +38,11 @@ class StageTheatre extends MovieTheatre
 	}
 }
 
-class Multiplex extends MovieTheatre
-{
-	public void getTicket(double rate)
-	{
-		System.out.println("\nYour total bill for movie at \u001B[31m\"" + getClass().getName() + "\"\u001B[0m is \u001B[32mINR " + (getCost() + (getCost() * rate)) + "\u001B[0m.\n");
-	}
-	
-	public void watchMovie()
-	{
-		System.out.println("\nYou are now watching movie at \u001B[33m\"" + getClass().getName() + "\"\u001B[0m.\n");
-	}
-}
+class StageTheatre extends MovieTheatre {}
 
-class IMAX extends MovieTheatre
-{
-	public void getTicket(double rate)
-	{
-		System.out.println("\nYour total bill for movie at \u001B[31m\"" + getClass().getName() + "\"\u001B[0m is \u001B[32mINR " + (getCost() + (getCost() * rate)) + "\u001B[0m.\n");
-	}
-	
-	public void watchMovie()
-	{
-		System.out.println("\nYou are now watching movie at \u001B[33m\"" + getClass().getName() + "\"\u001B[0m.\n");
-	}
-}
+class Multiplex extends MovieTheatre {}
+
+class IMAX extends MovieTheatre {}
 
 class Service
 {
