@@ -2,6 +2,7 @@ import java.util.List;
 
 import Entity.Employee;
 import Service.EmployeeService;
+import Service.EmployeeServiceImpl;
 
 public class Main {
 	
@@ -16,7 +17,7 @@ public class Main {
  public static void main(String[] args) {
    	
    // Creating employee service object.	 
-   EmployeeService employeeService = new EmployeeService();
+   EmployeeService employeeService = new EmployeeServiceImpl();
 
    // Printing employee list
    try 
@@ -152,14 +153,22 @@ public class Main {
     
     // Employees split list.
     System.out.println("Employees split list:\n---------------------");
-    List<Employee> splitArray[] = employeeService.splitAllEmployees();
-    System.out.println("Left half : " + splitArray[0]);
-    System.out.println("Right half : " + splitArray[1]);
+    try 
+    {
+    	List<Employee> splitArray[] = employeeService.splitAllEmployees();
+    	System.out.println("Left half : " + splitArray[0]);
+        System.out.println("Right half : " + splitArray[1]);
+	} 
+    catch (Exception exception) 
+    {
+    	System.out.println(exception.getClass().getName() + " : " + exception.getMessage());
+	}
+    
     
     
     
     // Removing employees with even number ids.
-    System.out.println("\n\nRemoving employees using id:\n----------------------------");
+    System.out.println("\n\n\nRemoving employees using id where id is even:\n---------------------------------------------");
     for(int count = -4; count <= 12; count += 2)
     {
     	try 
@@ -214,9 +223,16 @@ public class Main {
     
     // Employees split list.
     System.out.println("Employees split list:\n---------------------");
-    splitArray = employeeService.splitAllEmployees();
-    System.out.println("Left half : " + splitArray[0]);
-    System.out.println("Right half : " + splitArray[1]);
+    try 
+    {
+    	List<Employee> splitArray[] = employeeService.splitAllEmployees();
+    	System.out.println("Left half : " + splitArray[0]);
+        System.out.println("Right half : " + splitArray[1]);
+	} 
+    catch (Exception exception) 
+    {
+    	System.out.println(exception.getClass().getName() + " : " + exception.getMessage());
+	}
     
     
     
