@@ -27,7 +27,7 @@ abstract class AbstractMovieTheatre
 
 class MovieTheatre extends AbstractMovieTheatre
 {
-		public void getTicket(double rate)
+	public void getTicket(double rate)
 	{
 		System.out.println("\nYour total bill for movie at \u001B[31m\"" + getClass().getName() + "\"\u001B[0m is \u001B[32mINR " + (getCost() + (getCost() * rate)) + "\u001B[0m.\n");
 	}
