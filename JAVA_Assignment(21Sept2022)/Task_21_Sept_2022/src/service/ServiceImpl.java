@@ -35,8 +35,8 @@ public class ServiceImpl implements Service {
 
 	public void printEvenIntegerObjectsFromCollections(Collection<Integer> collections)
 			throws NullPointerException, CollectionsIsEmptyException, Exception {
-		if (collections == null)
-			throw new NullPointerException("Error: Reference pointing to null was passed! :(");
+		
+		checkCollectionsIsNotNull(collections);
 
 		if (collections.isEmpty())
 			throw new CollectionsIsEmptyException(collections);
