@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
@@ -16,127 +17,100 @@ public class Main {
 	    Service service = new ServiceImpl();
 		
 		
-		
-        // Creating an ArrayList for Integers.
-        List<Integer> sampleArrayList = new ArrayList<Integer>();
-        // Creating an LinkedList for Integers.
-        List<Integer> sampleLinkedList = new LinkedList<Integer>();
-	    // Creating an TreeSet for Integers.
-        Set<Integer> sampleTreeSet = new TreeSet<Integer>();
+	
+        List<Integer> sampleArrayList = null;
+        List<Integer> sampleLinkedList =  null;
+        Set<Integer> sampleTreeSet = null;
+        Set<Integer> sampleHashSet = null;
 
         
         
-        // Printing Collections.
-        System.out.println("Before inserting values:\n------------------------");
+        // Printing null collections.
+        System.out.println("Printing 'null' collections:\n----------------------------");
         try {service.printCollectionObject(sampleArrayList);} catch (Exception exception) {System.out.println(exception.getMessage());}
         try {service.printCollectionObject(sampleLinkedList);} catch (Exception exception) {System.out.println(exception.getMessage());}
         try {service.printCollectionObject(sampleTreeSet);} catch (Exception exception) {System.out.println(exception.getMessage());}
+        try {service.printCollectionObject(sampleHashSet);} catch (Exception exception) {System.out.println(exception.getMessage());}
         
         
         
-        // Inserting values into collections.
-        // Insert 1 to 10 into ArrayList.
+        // Printing even values from null collections.  
+        System.out.println("\n\n\n\nPrinting even values from 'null' collections:\n---------------------------------------------");
+        try {service.printEvenIntegerObjectsFromCollections(sampleArrayList);} catch (Exception exception) {System.out.println(exception.getMessage());}  
+        try {service.printEvenIntegerObjectsFromCollections(sampleLinkedList);} catch (Exception exception) {System.out.println(exception.getMessage());}
+        try {service.printEvenIntegerObjectsFromCollections(sampleTreeSet);} catch (Exception exception) {System.out.println(exception.getMessage());}
+        try {service.printEvenIntegerObjectsFromCollections(sampleHashSet);} catch (Exception exception) {System.out.println(exception.getMessage());}
+        
+        
+        
+        // Inserting values into null collections.
+        System.out.println("\n\n\n\nInserting values into 'null' collections:\n-----------------------------------------");
+        // Inserting 1 to 10 into ArrayList.
         try {service.insertIntegerObjectsIntoCollections(sampleArrayList, 1, 10);} catch (Exception exception) {System.out.println(exception.getMessage());}      
-        // Insert 11 to 20 into LinkedList.
+        // Inserting 11 to 20 into LinkedList.
         try {service.insertIntegerObjectsIntoCollections(sampleLinkedList, 11, 20);} catch (Exception exception) {System.out.println(exception.getMessage());}   
-        // Insert 21 to 30 into TreeSet.
+        // Inserting 21 to 30 into TreeSet.
         try {service.insertIntegerObjectsIntoCollections(sampleTreeSet, 21, 30);} catch (Exception exception) {System.out.println(exception.getMessage());}
+        // Inserting 31 to 40 into HashSet.
+        try {service.insertIntegerObjectsIntoCollections(sampleHashSet, 31, 40);} catch (Exception exception) {System.out.println(exception.getMessage());}
         
         
         
-        // Printing Collections.
-        System.out.println("\n\n\n\nAfter inserting values:\n-----------------------");
-        try {service.printCollectionObject(sampleArrayList);} catch (Exception exception) {System.out.println(exception.getMessage());}
-        try {service.printCollectionObject(sampleLinkedList);} catch (Exception exception) {System.out.println(exception.getMessage());}
-        try {service.printCollectionObject(sampleTreeSet);} catch (Exception exception) {System.out.println(exception.getMessage());}
-        
-         
-        
-        // Removing even values from collections.
-        // Removing even values from ArrayList.
-        try {service.removeEvenIntegerObjectsFromCollections(sampleArrayList);} catch (Exception exception) {System.out.println(exception.getMessage());}
-        // Removing even values from LinkedList.
-        try {service.removeEvenIntegerObjectsFromCollections(sampleLinkedList);} catch (Exception exception) {System.out.println(exception.getMessage());}
-        // Removing even values from TreeSet.
-        try {service.removeEvenIntegerObjectsFromCollections(sampleTreeSet);} catch (Exception exception) {System.out.println(exception.getMessage());}
-        
-        
-        
-        
-        // Printing Collections.
-        System.out.println("\n\n\n\nAfter removing even values:\n---------------------------");
-        try {service.printCollectionObject(sampleArrayList);} catch (Exception exception) {System.out.println(exception.getMessage());}
-        try {service.printCollectionObject(sampleLinkedList);} catch (Exception exception) {System.out.println(exception.getMessage());}
-        try {service.printCollectionObject(sampleTreeSet);} catch (Exception exception) {System.out.println(exception.getMessage());}
-        
-        
-        
-        // Removing all elements from collections.
-        sampleArrayList.clear();
-        sampleLinkedList.clear();
-        sampleTreeSet.clear();
-        
-        
-        
-        // Printing Collections.
-        System.out.println("\n\n\n\nAfter removing all values:\n--------------------------");
-        try {service.printCollectionObject(sampleArrayList);} catch (Exception exception) {System.out.println(exception.getMessage());}
-        try {service.printCollectionObject(sampleLinkedList);} catch (Exception exception) {System.out.println(exception.getMessage());}
-        try {service.printCollectionObject(sampleTreeSet);} catch (Exception exception) {System.out.println(exception.getMessage());}
-        
-        
-        
-        // Assigning "null" to collection references.
-        sampleArrayList = null;
-        sampleLinkedList = null;
-        sampleTreeSet = null;
-        
-        
-        
-        // Printing Collections.
-        System.out.println("\n\n\n\nAfter assigning null to collection references:\n----------------------------------------------");
-        try {service.printCollectionObject(sampleArrayList);} catch (Exception exception) {System.out.println(exception.getMessage());}
-        try {service.printCollectionObject(sampleLinkedList);} catch (Exception exception) {System.out.println(exception.getMessage());}
-        try {service.printCollectionObject(sampleTreeSet);} catch (Exception exception) {System.out.println(exception.getMessage());}
-        
-        
-        
-        // Trying to remove even values from  collections pointing towards null.
-        System.out.println("\n\n\nTrying to remove even values from collections pointing towards null:\n--------------------------------------------------------------------");
-        // Removing even values from ArrayList.
-        try {service.removeEvenIntegerObjectsFromCollections(sampleArrayList);} catch (Exception exception) {System.out.println(exception.getMessage());}
-        // Removing even values from LinkedList.
-        try {service.removeEvenIntegerObjectsFromCollections(sampleLinkedList);} catch (Exception exception) {System.out.println(exception.getMessage());}
-        // Removing even values from TreeSet.
-        try {service.removeEvenIntegerObjectsFromCollections(sampleTreeSet);} catch (Exception exception) {System.out.println(exception.getMessage());}
-	
-	
-	
-        // Trying to insert values into collections pointing towards null.
-        System.out.println("\n\n\nTrying to insert values into collections pointing towards null:\n---------------------------------------------------------------");
-        // Insert 1 to 10 into ArrayList.
-        try {service.insertIntegerObjectsIntoCollections(sampleArrayList, 1, 10);} catch (Exception exception) {System.out.println(exception.getMessage());}      
-        // Insert 11 to 20 into LinkedList.
-        try {service.insertIntegerObjectsIntoCollections(sampleLinkedList, 11, 20);} catch (Exception exception) {System.out.println(exception.getMessage());}   
-        // Insert 21 to 30 into TreeSet.
-        try {service.insertIntegerObjectsIntoCollections(sampleTreeSet, 21, 30);} catch (Exception exception) {System.out.println(exception.getMessage());}
-	
-        
-        // Assigning empty collection object to collection references.
+        // Empty collection objects assigned to collection references.
+        System.out.println("\n\n\n\nEmpty collection objects assigned to collection references.");
         sampleArrayList = new ArrayList<Integer>();
         sampleLinkedList = new LinkedList<Integer>();
         sampleTreeSet = new TreeSet<Integer>();
+        sampleHashSet = new HashSet<Integer>();
+        
+  
+        
+        // Printing empty collections.
+        System.out.println("\n\n\n\nPrinting 'empty' collections:\n-----------------------------");
+        try {service.printCollectionObject(sampleArrayList);} catch (Exception exception) {System.out.println(exception.getMessage());}
+        try {service.printCollectionObject(sampleLinkedList);} catch (Exception exception) {System.out.println(exception.getMessage());}
+        try {service.printCollectionObject(sampleTreeSet);} catch (Exception exception) {System.out.println(exception.getMessage());}
+        try {service.printCollectionObject(sampleHashSet);} catch (Exception exception) {System.out.println(exception.getMessage());}
         
         
-        // Trying to remove even values from empty collections.
-        System.out.println("\n\n\nTrying to remove even values from empty collections:\n----------------------------------------------------");
-        // Removing even values from ArrayList.
-        try {service.removeEvenIntegerObjectsFromCollections(sampleArrayList);} catch (Exception exception) {System.out.println(exception.getMessage());}
-        // Removing even values from LinkedList.
-        try {service.removeEvenIntegerObjectsFromCollections(sampleLinkedList);} catch (Exception exception) {System.out.println(exception.getMessage());}
-        // Removing even values from TreeSet.
-        try {service.removeEvenIntegerObjectsFromCollections(sampleTreeSet);} catch (Exception exception) {System.out.println(exception.getMessage());}
-	
+  
+        // Printing even values from empty collections.  
+        System.out.println("\n\n\n\nPrinting even values from 'empty' collections:\n----------------------------------------------");
+        try {service.printEvenIntegerObjectsFromCollections(sampleArrayList);} catch (Exception exception) {System.out.println(exception.getMessage());}  
+        try {service.printEvenIntegerObjectsFromCollections(sampleLinkedList);} catch (Exception exception) {System.out.println(exception.getMessage());}
+        try {service.printEvenIntegerObjectsFromCollections(sampleTreeSet);} catch (Exception exception) {System.out.println(exception.getMessage());}
+        try {service.printEvenIntegerObjectsFromCollections(sampleHashSet);} catch (Exception exception) {System.out.println(exception.getMessage());}
+        
+        
+        
+        // Inserting values into empty collections.
+        System.out.println("\n\n\n\nInserting values into 'empty' collections:\n------------------------------------------");
+        // Inserting 1 to 10 into ArrayList.
+        try {service.insertIntegerObjectsIntoCollections(sampleArrayList, 1, 10);} catch (Exception exception) {System.out.println(exception.getMessage());}      
+        // Inserting 11 to 20 into LinkedList.
+        try {service.insertIntegerObjectsIntoCollections(sampleLinkedList, 11, 20);} catch (Exception exception) {System.out.println(exception.getMessage());}   
+        // Inserting 21 to 30 into TreeSet.
+        try {service.insertIntegerObjectsIntoCollections(sampleTreeSet, 21, 30);} catch (Exception exception) {System.out.println(exception.getMessage());}
+        // Insert 31 to 40 into TreeSet.
+        try {service.insertIntegerObjectsIntoCollections(sampleHashSet, 31, 40);} catch (Exception exception) {System.out.println(exception.getMessage());}
+        
+        
+        
+        // Printing collections.
+        System.out.println("\n\n\n\nPrinting collections:\n---------------------");
+        try {service.printCollectionObject(sampleArrayList);} catch (Exception exception) {System.out.println(exception.getMessage());}
+        try {service.printCollectionObject(sampleLinkedList);} catch (Exception exception) {System.out.println(exception.getMessage());}
+        try {service.printCollectionObject(sampleTreeSet);} catch (Exception exception) {System.out.println(exception.getMessage());}
+        try {service.printCollectionObject(sampleHashSet);} catch (Exception exception) {System.out.println(exception.getMessage());}
+        
+        
+        
+        // Printing even values from collections.  
+        System.out.println("\n\n\n\nPrinting even values from collections:\n--------------------------------------");
+        try {service.printEvenIntegerObjectsFromCollections(sampleArrayList);} catch (Exception exception) {System.out.println(exception.getMessage());}  
+        try {service.printEvenIntegerObjectsFromCollections(sampleLinkedList);} catch (Exception exception) {System.out.println(exception.getMessage());}
+        try {service.printEvenIntegerObjectsFromCollections(sampleTreeSet);} catch (Exception exception) {System.out.println(exception.getMessage());}
+        try {service.printEvenIntegerObjectsFromCollections(sampleHashSet);} catch (Exception exception) {System.out.println(exception.getMessage());}
         
 	}
 }

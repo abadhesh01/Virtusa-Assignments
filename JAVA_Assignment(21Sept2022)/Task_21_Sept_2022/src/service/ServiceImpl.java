@@ -23,7 +23,7 @@ public class ServiceImpl implements Service {
 	public void printCollectionObject(Collection<Integer> collections) throws NullPointerException, CollectionsIsEmptyException, Exception
     {
 		if(collections == null)
-			throw new NullPointerException("Error: Reference of type pointing to null was passed! :(");
+			throw new NullPointerException("Error: Reference pointing to null was passed! :(");
     	
     	if(collections.isEmpty())
     	    throw new CollectionsIsEmptyException(collections);
@@ -32,7 +32,7 @@ public class ServiceImpl implements Service {
     }
     
 	
-    public void removeEvenIntegerObjectsFromCollections(Collection<Integer> collections) throws NullPointerException, CollectionsIsEmptyException, Exception
+    public void printEvenIntegerObjectsFromCollections(Collection<Integer> collections) throws NullPointerException, CollectionsIsEmptyException, Exception
     {
     	if(collections == null)
 			throw new NullPointerException("Error: Reference pointing to null was passed! :(");
@@ -40,13 +40,21 @@ public class ServiceImpl implements Service {
     	if(collections.isEmpty())
     	    throw new CollectionsIsEmptyException(collections);
     	
+    	String textString = "OBJECT(" + collections.getClass().getName() + ") : [";
+    	
     	Iterator<Integer> iterator = collections.iterator();
     	while(iterator.hasNext())
     	{
     	  Integer value = iterator.next();
     	  if(value.intValue() % 2 == 0)
-    		  iterator.remove();
+    	  {
+    		  //iterator.remove(); // This will remove even values.
+    		  textString += value + ", ";
+    	  }
     	}
+    	
+    	textString = textString.substring(0, (textString.length() -2)) + "]";
+    	System.out.println(textString);
     }
     
 }

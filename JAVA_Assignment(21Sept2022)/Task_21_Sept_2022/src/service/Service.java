@@ -10,6 +10,6 @@ public interface Service {
 	
 	public void printCollectionObject(Collection<Integer> collections) throws NullPointerException, CollectionsIsEmptyException, Exception;
 	
-	public void removeEvenIntegerObjectsFromCollections(Collection<Integer> collections) throws NullPointerException, CollectionsIsEmptyException, Exception;
+	public void printEvenIntegerObjectsFromCollections(Collection<Integer> collections) throws NullPointerException, CollectionsIsEmptyException, Exception;
 
 }
