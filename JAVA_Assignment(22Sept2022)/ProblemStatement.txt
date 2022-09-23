@@ -1,0 +1,6 @@
+XYZ Hotel sells 10 different meals [tiffin]. 
+Every Meal has id, name, price. 
+Customer can order multiple meals with any quantity. 
+Each time customer selects a meal it should be added to meal cart. 
+Customer can view/add/remove the meals in the cart and buy the meals by 
+paying total amount.
