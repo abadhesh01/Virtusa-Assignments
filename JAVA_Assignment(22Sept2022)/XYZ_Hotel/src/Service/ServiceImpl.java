@@ -20,6 +20,10 @@ public class ServiceImpl implements Service {
 	private Customer customer = new Customer();
 	private List<Meal> meals = new ArrayList<Meal>();
 
+	public void setReceiptNumber(long receiptNumber) {
+		this.receiptNumber = receiptNumber;
+	}
+
 	public void setMeals(List<Meal> meals) {
 		this.meals = meals;
 	}

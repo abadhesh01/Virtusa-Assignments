@@ -16,6 +16,7 @@ public class ExecutionArea {
 
 		// Service Object.
 		Service service = new ServiceImpl();
+		service.setReceiptNumber(1);
 
 		// Adding 10 meals to menu.
 		List<Meal> meals = new ArrayList<Meal>();

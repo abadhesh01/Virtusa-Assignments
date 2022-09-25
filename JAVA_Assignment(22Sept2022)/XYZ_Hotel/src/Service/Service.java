@@ -12,6 +12,10 @@ import Model.Meal;
 
 public interface Service {
 
+	void setReceiptNumber(long receiptNumber);
+
+	void setMeals(List<Meal> meals) throws Exception;
+
 	void viewMenu() throws NoMealsAvailableException, Exception;
 
 	void viewCart() throws CartIsEmptyException, Exception;
@@ -25,5 +29,4 @@ public interface Service {
 
 	void cancleOrder() throws CartIsEmptyException, Exception;
 
-	void setMeals(List<Meal> meals) throws Exception;
 }
