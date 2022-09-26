@@ -1,0 +1,12 @@
+Console Application: 
+There are two types of customers 
+1. Customer 
+2. Prime Customer 
+Both Customers can 
+a. Search Products 
+b. Buy Products 
+c. Add Products to cart 
+d. Buy Products + includes delivery charges. 
+But Prime Customers has primeId, subscriptionYear 
+a. can watch movies 
+b. gets free delivery
