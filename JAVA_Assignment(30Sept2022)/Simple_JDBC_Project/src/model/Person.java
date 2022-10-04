@@ -55,7 +55,7 @@ public class Person {
 	public void setEmail(String email) {
 		this.email = email;
 	}
-	
+
 	public Statement getStatement() {
 		return statement;
 	}
@@ -96,43 +96,40 @@ public class Person {
 	}
 
 	// Generates random mobile number.
-	public String generateRandomMobileNumber()
-	{
-	  String mobileNumber = "";	
-		
-	  for(int count = 0; count < 9; count ++)
-	  {
-		  mobileNumber += (int) (Math.random() * 10);
-	  }
-	  
-	  return mobileNumber;	
+	public String generateRandomMobileNumber() {
+		String mobileNumber = "";
+
+		for (int count = 0; count < 10; count++) {
+			mobileNumber += (int) (Math.random() * 10);
+		}
+
+		return mobileNumber;
 	}
-	
+
 	// Grants access to database.
-	public void getAccessToSampleDatabase() throws ClassNotFoundException, SQLException  {
+	public void getAccessToSampleDatabase() throws ClassNotFoundException, SQLException {
 		Class.forName("com.mysql.cj.jdbc.Driver");
+
 		Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/sampleDB", "user", "password");
+
 		statement = connection.createStatement();
 	}
- 
+
 	// Inserts dummy persons to database.
-	public void insertDummyPersonsToDatabase() throws SQLException
-	{
+	public void insertDummyPersonsToDatabase() throws SQLException {
 		String query = "insert into Person values\n";
-		for(int id = 1; id <= 10; id ++)
-		{
-			query += "(" + id + ", 'Lorem" + id + " Ipsium" + id + "', '" 
-		    + generateRandomMobileNumber() + "', 'ipsium.lorem_" + id + "@email.com'),\n"; 
+		for (int id = 1; id <= 10; id++) {
+			query += "(" + id + ", 'Lorem" + id + " Ipsium" + id + "', '" + generateRandomMobileNumber()
+					+ "', 'ipsium.lorem_" + id + "@email.com'),\n";
 		}
-		query = query.substring(0, query.length() -2) + ";";
+		query = query.substring(0, query.length() - 2) + ";";
 		logger.trace(query);
 		statement.executeUpdate(query);
 		logger.info("Dummy persons inserted to the database successfully.");
 	}
 
 	// Deletes dummy persons with odd number ids from database.
-	public void deleteDummyPersonsWithOddIds() throws SQLException
-	{
+	public void deleteDummyPersonsWithOddIds() throws SQLException {
 		String query = "delete from Person where id = ";
 		for (int id = 1; id <= 9; id += 2) {
 			logger.trace(query + id);
@@ -140,36 +137,35 @@ public class Person {
 		}
 		logger.info("Dummy persons with odd ids deleted from the database successfully.");
 	}
-	
-	// Extracts all persons details from database. 
-	public List<Person> getAllPersons() throws SQLException
-	{
-		List<Person> persons = new ArrayList<Person>(); 
+
+	// Extracts all persons details from database.
+	public List<Person> getAllPersons() throws SQLException {
+		List<Person> persons = new ArrayList<Person>();
 		ResultSet resultSet = statement.executeQuery("select * from Person");
-		while(resultSet.next())
-		{
-			persons.add(new Person(resultSet.getLong("id"), 
-			resultSet.getString("name"), resultSet.getString("mobile"), 
-			resultSet.getString("email")));
+		while (resultSet.next()) {
+			persons.add(new Person(resultSet.getLong("id"), resultSet.getString("name"), resultSet.getString("mobile"),
+					resultSet.getString("email")));
 		}
 		return persons;
 	}
-	
+
 	// Prints all persons details from database.
-	public void printPersons() throws SQLException
-	{
+	public void printPersons() throws SQLException {
 		logger.info("\n\nAll Persons' Details:\n----------------------------");
 		List<Person> persons = getAllPersons();
-		for(Person person : persons)
-		{
+		for (Person person : persons) {
 			logger.info(person);
 		}
 	}
-	
+
 	// Truncates the database.
-	public void truncateDatabase() throws SQLException
-	{
+	public void truncateDatabase() throws SQLException {
 		statement.executeUpdate("truncate table person;");
 		logger.info("Database truncated successfully.");
+	}
+
+	// Close access to database.
+	public void revokeAccessFromDatabase() throws SQLException {
+		statement.close();
 	}
 }
