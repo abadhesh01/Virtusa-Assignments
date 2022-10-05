@@ -1,0 +1,1 @@
+ mvn archetype:generate -DgroupId="example.maven.sampleproject" -DartifactId=SampleMavenProjectExample -DinteractiveMode=false  > OUTPUT-1
