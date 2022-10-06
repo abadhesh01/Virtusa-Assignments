@@ -59,6 +59,10 @@ SOLUTIONS:
 {2} (Added different profiles in pom.xml)
 
 {3} mvn clean compile package > "OUTPUT-5(2)"
+
+{4} mvn clean compile test package -Penv1 > "OUTPUT-5(3)"
+
+{5} mvn clean compile test package -Penv2 > "OUTPUT-5(4)"
 ------------------------------------------------------------------------------------------------------------------------------------------------------------
 [6]
 {1} mvn  archetype:generate -DgroupId="ex.sample.webapp" -DartifactId=SampleWebApp -DinteractiveMode=false -DarchetypeArtifactId=maven-archetype-webapp > "OUTPUT-6(1)"
