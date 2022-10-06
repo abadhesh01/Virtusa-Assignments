@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project>
+    
+  
+  <modelVersion>4.0.0</modelVersion>
+             
+  
+  <groupId>com.abadhesh.app</groupId>
+    
+  
+  <artifactId>my-app</artifactId>
+    
+  <version>1.0</version>
+                             
+  
+  
+  <packaging>pom</packaging>
+          
+  
+  <modules>
+           
+    
+    <module>HelloWorld</module>
+        
+    <module>DemoMvnPrg</module>
+      
+  </modules>
+        
+
+</project>

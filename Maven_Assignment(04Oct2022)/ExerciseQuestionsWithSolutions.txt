@@ -1,0 +1,75 @@
+--------- 
+PROBLEMS:
+---------
+[1] Create a maven archertype project from command line providing groupid and artifactid as input parameters.
+
+[2] Create a project where the packaging type is "jar" file and install that into local repository.
+
+[3] Create a  different project. Add the above project as dependency. Develope an application using above APIs from the above jar
+    and check if it is working fine at compile time and run time.
+
+[4] Create a projects with 2 independent modules where each module will have its own "pom.xml" and main project "pom.xml" is configured as parent.
+
+[5] Create a project and build it for different profiles.
+
+[6] Create a web application using maven archetype and deploy it on tomcat server.
+
+[7] Create a maven project in eclipse, write the test cases for employee project and build it.
+
+----------
+SOLUTIONS: 
+----------
+ [1]
+ {1} mvn archetype:generate -DgroupId="example.maven.sampleproject" -DartifactId=SampleMavenProjectExample -DinteractiveMode=false  > OUTPUT-1
+-----------------------------------------------------------------------------------------------------------------------------------------------------------
+ [2]
+ {1} mvn archetype:generate -DgroupId="demo.hello.app" -DartifactId=HelloWorld -DinteractiveMode=false > "OUTPUT-2(1)"
+ 
+ { } cd HelloWorld
+ 
+ {2} mvn clean package > "OUTPUT-2(2)"
+ 
+ {3} mvn install > "OUTPUT-2(3)"
+-----------------------------------------------------------------------------------------------------------------------------------------------------------
+ [3]
+ {1} mvn archetype:generate -DgroupId="demo.mvn.prg" -DartifactId=DemoMvnPrg -DinteractiveMode=false > "OUTPUT-3(1)"
+ 
+ { } cd DemoMvnPrg
+ 
+ {2} mvn install:install-file 
+     -Dfile="C:\Users\abadh\OneDrive\Documents\VirtusaTrainingAssignments\Maven_Assignment(04Oct2022)\Project 2\HelloWorld\target\HelloWorld-1.0-SNAPSHOT.jar" 
+     -DgroupId="demo.hello.app" 
+     -DartifactId=HelloWorld 
+     -Dversion="1.0" 
+     -Dpackaging=jar 
+     > "OUTPUT-3(2)"
+
+ {3} mvn clean compile test > "OUTPUT-3(3)"
+------------------------------------------------------------------------------------------------------------------------------------------------------------
+[4]
+{1} mvn archetype:generate -DgroupId="eg.sample.app" -DartifactId=SampleApp -DinteractiveMode=false > "OUTPUT-4(1)"
+
+{2} mvn archetype:generate -DgroupId="eg.demo.prg" -DartifactId=DemoPrg -DinteractiveMode=false > "OUTPUT-4(2)"
+------------------------------------------------------------------------------------------------------------------------------------------------------------
+[5]
+{1} mvn archetype:generate -DgroupId="my.personal.app" -DartifactId="MyPersonalApp" -DinteractiveMode=false > "OUTPUT-5(1)"
+
+{ } cd MyPersonalApp
+
+{2} (Added different profiles in pom.xml)
+
+{3} mvn clean compile package > "OUTPUT-5(2)"
+------------------------------------------------------------------------------------------------------------------------------------------------------------
+[6]
+{1} mvn  archetype:generate -DgroupId="ex.sample.webapp" -DartifactId=SampleWebApp -DinteractiveMode=false -DarchetypeArtifactId=maven-archetype-webapp > "OUTPUT-6(1)"
+
+{ } cd SampleWebApp
+
+{2} mvn clean compile package > "OUTPUT-6(2)"
+
+{3} mvn tomcat7:run-war > "OUTPUT-6(3)"
+-------------------------------------------------------------------------------------------------------------------------------------------------------------
+[7] 
+{1} (Finished writing all necessary source codes.)
+
+{2} mvn clean compile package > "OUTPUT-7"

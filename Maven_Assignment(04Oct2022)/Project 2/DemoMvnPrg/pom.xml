@@ -3,14 +3,14 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <modelVersion>4.0.0</modelVersion>
   <parent>
-    <groupId>com.javatpoint.application1</groupId>
+    <groupId>com.abadhesh.app</groupId>
     <artifactId>my-app</artifactId>
     <version>1.0</version>
   </parent>
-  <groupId>example.maven.sampleproject</groupId>
-  <artifactId>SampleMavenProjectExample</artifactId>
+  <groupId>demo.mvn.prg</groupId>
+  <artifactId>DemoMvnPrg</artifactId>
   <version>1.0-SNAPSHOT</version>
-  <name>SampleMavenProjectExample</name>
+  <name>DemoMvnPrg</name>
   <url>http://maven.apache.org</url>
   <dependencies>
     <dependency>
@@ -19,12 +19,17 @@
       <version>3.8.1</version>
       <scope>test</scope>
     </dependency>
+    <dependency>
+     <groupId>demo.hello.app</groupId>
+      <artifactId>HelloWorld</artifactId>
+      <version>1.0</version>
+    </dependency>
   </dependencies>
-  <properties>
+<properties>
      <maven.compiler.source>1.8</maven.compiler.source>
      <maven.compiler.target>1.8</maven.compiler.target>
-     <project.build.sourceEncoding>   
+     <project.build.sourceEncoding>  
      UTF-8
      </project.build.sourceEncoding>
-  </properties>
+</properties>
 </project>

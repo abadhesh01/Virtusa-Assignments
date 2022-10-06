@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project>
+      
+  
+  
+  <modelVersion>4.0.0</modelVersion>
+      
+  
+  
+  <groupId>com.myproj3.app</groupId>
+      
+  
+  <artifactId>my-app</artifactId>
+      
+  
+  <version>1.0</version>
+      
+  
+  
+  <packaging>pom</packaging>
+    
+  
+  <modules>
+          
+    
+    <module>SampleApp</module>
+          
+    
+    <module>DemoPrg</module>
+      
+  </modules>
+  
+</project>
