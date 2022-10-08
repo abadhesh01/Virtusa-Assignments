@@ -27,9 +27,9 @@ public class Executor {
 
 				System.out.println("\n\n");
 				System.out.println("[1] Create dummy elements with duplicates for Employee HashSet.");
-				System.out.println("[2] Create dummy elements with duplicates  for SampleEmployee HashSet.");
-				System.out.println("[3] Create dummy elements with duplicates  for Employee TreeSet.");
-				System.out.println("[4] Create dummy elements with duplicates  for SampleEmployee TreeSet.");
+				System.out.println("[2] Create dummy elements with duplicates for SampleEmployee HashSet.");
+				System.out.println("[3] Create dummy elements with duplicates for Employee TreeSet.");
+				System.out.println("[4] Create dummy elements with duplicates for SampleEmployee TreeSet.");
 				System.out.println("[5] Display Employee HashSet.");
 				System.out.println("[6] Display SampleEmployee HashSet.");
 				System.out.println("[7] Display Employee TreeSet.");
