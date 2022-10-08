@@ -1,28 +1,0 @@
-
-
-java:S1192/"UDefine a constant instead of duplicating this literal "Exception message : " 3 times.(”ÆçÜûÿÿÿÿ8Æ¬ª³»0HÀRCRITICALZ
-CODE_SMELL
-‰
-java:S11928"UDefine a constant instead of duplicating this literal "--------------------" 6 times.(ƒ©ä¶şÿÿÿÿHÄRCRITICALZ
-CODE_SMELL
-|	java:S117"QRename this local variable to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(•Á’µHÛRMINORZ
-CODE_SMELL
-H
-java:S1643A"Use a StringBuilder instead.(ÆŞµ™H¾RMINORZ
-CODE_SMELL
-
-java:S1192."SDefine a constant instead of duplicating this literal "Exception class : " 3 times.(”öâãùÿÿÿÿ8Æ¬ª³»0HĞRCRITICALZ
-CODE_SMELL
-
-java:S11929"ZDefine a constant instead of duplicating this literal "-------------------------" 3 times.(‰ºŞéøÿÿÿÿHËRCRITICALZ
-CODE_SMELL
-’
-java:S11928"^Define a constant instead of duplicating this literal "%s %-20s %s %-20s %s %-25s %s" 5 times.(ƒ©ä¶şÿÿÿÿHÕRCRITICALZ
-CODE_SMELL
-|	java:S117"QRename this local variable to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(Ï¿şHÏRMINORZ
-CODE_SMELL
-	java:S117"QRename this local variable to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(¿ÅØ×úÿÿÿÿHÔRMINORZ
-CODE_SMELL
-
-java:S1450"URemove the "driver" field and declare it as a local variable in the relevant methods.(Ö÷÷‚H¿RMINORZ
-CODE_SMELL

@@ -1,6 +1,0 @@
-INDEX VERSION 1.131+C:\Users\abadh\OneDrive\Documents\VirtusaTrainingAssignments\MyCodes\.metadata\.plugins\org.eclipse.jdt.core
-219296435.index
-1865797976.index
-579818349.index
-536582176.index
-2993014122.index
