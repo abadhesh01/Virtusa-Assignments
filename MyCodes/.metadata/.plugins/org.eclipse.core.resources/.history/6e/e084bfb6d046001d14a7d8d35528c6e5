@@ -1,0 +1,10 @@
+package service;
+
+import org.apache.log4j.Logger;
+
+public interface Service {
+
+	void setDatbaseConnection(Logger logger);
+	
+	public void getllUsersList(Logger logger);
+}
