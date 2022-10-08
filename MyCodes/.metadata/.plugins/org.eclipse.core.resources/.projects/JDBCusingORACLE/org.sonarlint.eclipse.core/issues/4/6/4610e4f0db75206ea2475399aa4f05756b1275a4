@@ -1,5 +1,5 @@
 
-r	java:S899/"BDo something with the "boolean" value returned by "createNewFile".(Ğ’Íùÿÿÿÿ8îÒì³»0HõRMINORZBUG
+r	java:S899/"BDo something with the "boolean" value returned by "createNewFile".(Ğ’Íùÿÿÿÿ8îÒì³»0HøRMINORZBUG
 Y
-java:S1075+"&Remove this hard-coded path-delimiter.(ÜÚ¯²8øƒí´»0HôRMINORZ
+java:S1075+"&Remove this hard-coded path-delimiter.(ÜÚ¯²8øƒí´»0HùRMINORZ
 CODE_SMELL
