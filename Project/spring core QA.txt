@@ -1,0 +1,43 @@
+1) What is a Spring Framework?
+2) What are Beans in Spring?
+3) What is Dependency Injection?
+4) What are the roles of an IOC (Inversion of Control) Container?
+5) What is Application Context?
+6) Explain the process of creating an ApplicationContext in Spring?
+7) List out the types of Dependency Injection?
+8) List out the different scopes of Bean?
+9) How many types of IOC containers are there in spring?
+10) How configuration metadata is provided to the Spring container?
+11) Define Bean Wiring?
+12) What do you understand by auto wiring byname the different modes of it?
+13) What are the limitations with auto wiring?
+14) What are the modules of spring framework?
+15) Can I use one configuration document in other configuration?
+16) XML Shortcuts & Annotatons?
+17) Can a container read multiple configuration files?
+18) At what time the bean objects are created(At the time of container start up/ getBean is called)?
+19) What is the by default type of loading? and explain?
+20) Can I configure a bean class multiple time?
+21) When I call getBean() method more than once on the same bean how many objects returned? explain? what are available scopes?
+22) Can I set the same property multiple times?
+23) What is the difference b/w setter and Constructor injection?
+24) Can I do setter and constructor injection both on the same bean? explain?
+25) Is the Spring converts all the values to target data types?
+26) What is Auto wiring? explain?
+27) Can create a alias for bean?
+28) How to use XML shortcuts in configuration file?
+29) Do the configurations using Annotations?
+30) Do the configurations using Java?
+31) What are the life cycle methods?
+32) How to configure inheritance ?
+33) Can I import one xml into another xml?
+       
+1. Annotations(@Component,@Bean,@ComponentScan,@Value,@Autowired,@Required)
+2. Componentscan
+3. Autowiring
+4. Life cycle methods
+5. scopes
+6. XML short cuts
+7. properties class
+8. Inheritance mapping
+9. importing XML

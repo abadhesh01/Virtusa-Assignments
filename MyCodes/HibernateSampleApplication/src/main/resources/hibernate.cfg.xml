@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Visit https://hibernate.org/dtd/ to get the DOCTYPE attribute values. -->
+<!DOCTYPE hibernate-configuration PUBLIC
+	"-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+	"http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+<hibernate-configuration>
+	<session-factory>
+
+		<!-- Hibernate Database Connection Properties: -->
+		<!-- Database Driver Class -->
+		<property name="hibernate.connection.driver_class">
+			oracle.jdbc.OracleDriver
+		</property>
+		<!-- Database URL -->
+		<property name="hibernate.connection.url">
+			jdbc:oracle:thin:@localhost:1521:xe
+		</property>
+		<!-- Database User Name -->
+		<property name="hibernate.connection.username">
+			oracle11gdb
+		</property>
+		<!-- Database Password -->
+		<property name="hibernate.connection.password">
+			default
+		</property>
+		<!-- Number of connection waiting. -->
+		<property name="hibernate.connection.pool_size">
+			1
+		</property>
+
+
+
+		<!-- Hibernate Configuration Properties: -->
+		<!-- Database Dialect -->
+		<property name="hibernate.dialect">
+			org.hibernate.dialect.Oracle10gDialect
+		</property>
+		<!-- Property to display SQL syntax on console. -->
+		<property name="hibernate.show_sql">
+			true
+		</property>
+
+
+
+		<!-- Hibernate Miscellaneous Property: -->
+		<!-- Property to validate schema DDL to database. -->
+		<property name="hibernate.hbm2ddl.auto">
+			create-drop
+		</property>
+
+
+
+		<!-- Entity mapping -->
+		<mapping class="sample.entity.Person"></mapping>
+		<mapping class="sample.entity.Engineer"></mapping>
+		<mapping class="sample.entity.Manager"></mapping>
+
+	</session-factory>
+</hibernate-configuration>

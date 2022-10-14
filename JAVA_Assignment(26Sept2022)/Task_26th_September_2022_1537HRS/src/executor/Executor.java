@@ -7,6 +7,9 @@ public class Executor {
 	public static Logger logger = Logger.getLogger(Executor.class);
 	
 	public static void main(String[] args) {
-       logger.info("Information");
+        
+		
+		System.out.println("Hi");
+		logger.info("Information");
 	}
 }
