@@ -66,13 +66,18 @@ public class Executor {
 		}
 		return text.substring(0, 5) + " " + text.substring(5, 10);
 	}
+	
+	// Getting person by random id.
+	public static Person getPersonByRandomId(Service service, int personCount) {
+		int random = ThreadLocalRandom.current().nextInt(1, personCount + 1);
+		return service.getPerson(random);
+	}
 
 	// Shows random persons' details.
 	public static void showPersonsByRandomIds(Service service, int personCount) {
 		String text = "Getting Random Person(s):\n-------------------------\n";
 		for (int count = 1; count <= personCount; count++) {
-			int random = ThreadLocalRandom.current().nextInt(1, personCount + 1);
-			Person person = service.getPerson(random);
+			Person person = getPersonByRandomId(service, personCount);
 			if (person == null) {
 				continue;
 			}
@@ -86,7 +91,7 @@ public class Executor {
 		for (int count = 1; count <= personCount; count++) {
 
 			if (count % 3 == 1) {
-				service.insertPerson(new Engineer(count, "Lorem_" + count + " Ipsium_" + count,
+				service.insertPerson(new Engineer(count, "Engineer_" + count + " Professional_" + count,
 						new ContactInfo("N/A", "N/A"), getEngineeringDegree(), getEngineeringBranch()));
 				continue;
 			}
@@ -98,30 +103,41 @@ public class Executor {
 			}
 
 			service.insertPerson(
-					new Person(count, "Engineer_" + count + " Professional_" + count, new ContactInfo("N/A", "N/A")));
+					new Person(count, "Lorem_" + count + " Ipsium_" + count, new ContactInfo("N/A", "N/A")));
 		}
 	}
 
-	// Updating contact information of random persons.
+	// Updating contact information of random persons into database.
 	public static void updateContactInfoOfRandomPersons(Service service, int personCount) {
 		for (int count = 1; count <= personCount; count++) {
-			int random = ThreadLocalRandom.current().nextInt(1, personCount + 1);
-			Person person = service.getPerson(random);
+			Person person = getPersonByRandomId(service, personCount);
 			if (person == null) {
 				continue;
 			}
 			ContactInfo contactInfo = person.getContactInfo();
-			contactInfo.setEmail("sample.id" + random + "@email.com");
+			contactInfo.setEmail("sample.id" + person.getId() + "@email.com");
 			contactInfo.setPhone(generatMobileNumber());
 			service.updatePerson(person);
 		}
 	}
 
+	// Deleting random persons from database.
+	public static void deleteRandomPersonsFromDatabase(Service service, int personCount) {
+		for (int count = 1; count <= personCount; count++) {
+			Person person = getPersonByRandomId(service, personCount);
+			if (person == null) {
+				continue;
+			}
+			service.deletePerson(person);
+		}
+	}
+
 	public static void main(String[] args) {
 
+		// Log4j basic configuration.
 		BasicConfigurator.configure();
 
-		// Setting up service.
+		// Setting up services.
 		Service service = new ServiceImpl();
 
 		// Setting up connection to database.
@@ -137,9 +153,20 @@ public class Executor {
 		scanner.nextLine();
 		showPersonsByRandomIds(service, 10);
 
-		logger.info("\n\n\nPress Enter key to uptadte random persons contact info into database.....\n");
+		// Updating contact information of random persons.
+		logger.info("\n\n\nPress Enter key to update random persons contact info into database.....\n");
 		scanner.nextLine();
 		updateContactInfoOfRandomPersons(service, 10);
+
+		// Getting random persons from database.
+		logger.info("\n\n\nPress Enter key to display random persons from database.....\n");
+		scanner.nextLine();
+		showPersonsByRandomIds(service, 10);
+
+		// Deleting random persons from database.
+		logger.info("\n\n\nPress Enter key to delete random persons from database.....\n");
+		scanner.nextLine();
+		deleteRandomPersonsFromDatabase(service, 10);
 
 		// Getting random persons from database.
 		logger.info("\n\n\nPress Enter key to display random persons from database.....\n");

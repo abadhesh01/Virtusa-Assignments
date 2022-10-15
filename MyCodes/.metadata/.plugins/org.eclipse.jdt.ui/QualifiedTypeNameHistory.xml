@@ -38,7 +38,6 @@
     <fullyQualifiedTypeName name="sample.service.ServiceImpl"/>
     <fullyQualifiedTypeName name="javax.persistence.Embedded"/>
     <fullyQualifiedTypeName name="javax.persistence.Embeddable"/>
-    <fullyQualifiedTypeName name="sample.service.Service"/>
     <fullyQualifiedTypeName name="java.lang.ThreadLocal"/>
     <fullyQualifiedTypeName name="sample.entity.ContactInfo"/>
     <fullyQualifiedTypeName name="java.lang.Math"/>
@@ -48,9 +47,12 @@
     <fullyQualifiedTypeName name="javax.persistence.Entity"/>
     <fullyQualifiedTypeName name="lombok.Data"/>
     <fullyQualifiedTypeName name="lombok.NoArgsConstructor"/>
-    <fullyQualifiedTypeName name="sample.entity.Person"/>
     <fullyQualifiedTypeName name="java.lang.String"/>
     <fullyQualifiedTypeName name="java.util.concurrent.ThreadLocalRandom"/>
     <fullyQualifiedTypeName name="sample.entity.Manager"/>
     <fullyQualifiedTypeName name="javax.persistence.Column"/>
+    <fullyQualifiedTypeName name="javax.persistence.Inheritance"/>
+    <fullyQualifiedTypeName name="javax.persistence.InheritanceType"/>
+    <fullyQualifiedTypeName name="sample.service.Service"/>
+    <fullyQualifiedTypeName name="sample.entity.Person"/>
 </qualifiedTypeNameHistroy>
