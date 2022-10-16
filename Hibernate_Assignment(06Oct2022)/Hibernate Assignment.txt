@@ -1,0 +1,16 @@
+Hibernate Assignment:
+---------------------
+
+[1] Create a Spring Core application with Hibernate to show case ONE-TO-ONE relationship (E.g: Customer and Address). 
+    Implement all CRUD operations using Hibernate Session object. Use @OneToOne/mappedBy annotation.
+
+[2] Create a Spring Core application with Hibernate to show case ONE-TO-MANY/MANY-TO-ONE relationship (E.g: Company and Employee).
+    Implement all CRUD operations using Hibernate Session object. Use @OneToMany/@ManyToOne/mappedBy annotations.
+
+[3] Create a Spring Core application with Hibernate to show case MANY-TO-MANY relationship (E.g: Students and Courses). 
+    Implement all CRUD operations using Hibernate Session object. Use @ManyToMany annotation.
+
+[4] Create a program to work with second level cache. 
+    Implement all above programs using JPA ORM framework :
+    (a) using EntityManagerFactory & EntityManager objects in place of SessionFactory & Session objects.
+    (b) Use JPQL in place of HQL.

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!DOCTYPE hibernate-configuration PUBLIC
+	"-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+	"http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+
+<hibernate-configuration>
+	<session-factory>
+
+		<!-- Hibernate Connection Properties: -->
+
+		<property name="hibernate.connection.driver_calss">
+			oracle.jdbc.OracleDriver
+		</property>
+
+		<property name="hibernate.connection.url">
+			jdbc:oracle:thin:@localhost:1521:xe
+		</property>
+
+		<property name="hibernate.connection.username">
+			oracle11gdb
+		</property>
+
+		<property name="hibernate.connection.password">
+			default
+		</property>
+
+		<property name="hibernate.connection.pool_size">
+			1
+		</property>
+
+		<!-- Hibernate Configuration Properties: -->
+
+		<property name="hibernate.dialect">
+			org.hibernate.dialect.Oracle10gDialect
+		</property>
+
+		<property name="hibernate.show_sql">
+			true
+		</property>
+
+		<!-- Hibernate Miscellaneous Property: -->
+
+		<property name="hibernate.hbm2ddl.auto">
+			create-drop
+		</property>
+
+		<mapping class="solution1.model.Customer"></mapping>
+		<mapping class="solution1.model.Address"></mapping>
+
+	</session-factory>
+</hibernate-configuration>
