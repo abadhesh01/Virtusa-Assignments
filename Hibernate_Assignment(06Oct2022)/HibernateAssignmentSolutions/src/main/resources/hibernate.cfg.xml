@@ -47,6 +47,8 @@
 
 		<mapping class="solution1.model.Customer"></mapping>
 		<mapping class="solution1.model.Address"></mapping>
+		<mapping class="solution2.model.Company"></mapping>
+		<mapping class="solution2.model.Employee"></mapping>
 
 	</session-factory>
 </hibernate-configuration>

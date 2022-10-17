@@ -63,7 +63,7 @@ public class ServiceImpl implements Service {
 	public ServiceImpl() {
 		super();
 		configuration = new Configuration();
-		configuration.configure("solution1.cfg.xml");
+		configuration.configure("hibernate.cfg.xml");
 		sessionFactory = configuration.buildSessionFactory();
 	}
 
