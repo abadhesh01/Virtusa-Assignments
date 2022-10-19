@@ -56,8 +56,6 @@ public class Executor {
 				List<Student> studentListOfCourses = course.getStudents();
 				courseListOfStudents.add(course);
 				studentListOfCourses.add(student1);
-//				course.setStudents(studentListOfCourses);
-//				student1.setCourses(courseListOfStudents);
 			}
 
 			// Condition for adding courses to student2.
@@ -66,8 +64,6 @@ public class Executor {
 				List<Student> studentListOfCourses = course.getStudents();
 				courseListOfStudents.add(course);
 				studentListOfCourses.add(student2);
-//				course.setStudents(studentListOfCourses);
-//				student2.setCourses(courseListOfStudents);
 			}
 
 			// Condition for adding courses to student3.
@@ -76,8 +72,6 @@ public class Executor {
 				List<Student> studentListOfCourses = course.getStudents();
 				courseListOfStudents.add(course);
 				studentListOfCourses.add(student3);
-//				course.setStudents(studentListOfCourses);
-//				student1.setCourses(courseListOfStudents);
 			}
 
 			if (saveCourses == true) {
@@ -135,7 +129,7 @@ public class Executor {
 		}
 		for (Course course : courses) {
 			course.getStudents().remove(student);
-			session.save(course);
+			session.update(course);
 		}
 		courses.clear();
 		session.delete(student);
@@ -161,7 +155,7 @@ public class Executor {
 			}
 			for (Student student : students) {
 				student.getCourses().remove(course);
-				session.save(student);
+				session.update(student);
 			}
 			students.clear();
 			session.delete(course);
