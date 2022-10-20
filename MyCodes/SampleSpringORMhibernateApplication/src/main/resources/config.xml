@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="
+    http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+    http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+    http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd">
+
+	<tx:annotation-driven />
+
+	<!-- DataSource Configuration: -->
+	<bean
+		class="org.springframework.jdbc.datasource.DriverManagerDataSource"
+		name="data_source">
+		<property name="driverClassName"
+			value="oracle.jdbc.OracleDriver" />
+		<property name="url"
+			value="jdbc:oracle:thin:@localhost:1521:xe" />
+		<property name="username" value="oracle11gdb" />
+		<property name="password" value="default" />
+	</bean>
+
+	<!-- SessionFactory Configuration: -->
+	<bean
+		class="org.springframework.orm.hibernate5.LocalSessionFactoryBean"
+		name="session_factory">
+		<!-- (1) DataSource Properties Configuration: -->
+		<property name="dataSource" ref="data_source"></property>
+		<!-- (2) Hibernate Properties Configuration: -->
+		<property name="hibernateProperties">
+			<props>
+				<prop key="hibernate.dialect">org.hibernate.dialect.Oracle10gDialect</prop>
+				<prop key="hibernate.show_sql">true</prop>
+				<prop key="hibernate.hbm2ddl.auto">create-drop</prop>
+			</props>
+		</property>
+		<!-- (3) Annotated Class Configuration: -->
+		<property name="annotatedClasses">
+			<list>
+				<value>
+					sample.model.Client
+				</value>
+			</list>
+		</property>
+	</bean>
+
+	<!-- HibernateTemplate Configuration: -->
+	<bean class="org.springframework.orm.hibernate5.HibernateTemplate"
+		name="hibernateTemplate">
+		<property name="sessionFactory" ref="session_factory"></property>
+	</bean>
+
+	<!-- ClientDao Configuration: -->
+	<bean class="sample.dao.ClientDao" name="client_dao">
+		<property name="hibernateTemplate" ref="hibernateTemplate"></property>
+	</bean>
+
+	<!-- HibernateTransactionManager Configuration: -->
+	<bean
+		class="org.springframework.orm.hibernate5.HibernateTransactionManager"
+		name="transactionManager">
+		<property name="sessionFactory" ref="session_factory"></property>
+	</bean>
+
+</beans>
