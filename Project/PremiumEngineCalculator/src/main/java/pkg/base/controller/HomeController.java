@@ -1,8 +1,13 @@
 package pkg.base.controller;
 
+import java.util.Date;
+
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
+import org.apache.log4j.BasicConfigurator;
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -23,6 +28,7 @@ public class HomeController {
 
 	@Autowired
 	private HomeService homeService;
+	private Logger logger;
 	private String customerBaseURL = "http://localhost:9090/PremiumEngineCalculator/home/customer/";
 	private String adminBaseURL = "http://localhost:9090/PremiumEngineCalculator/home/admin/";
 
@@ -33,26 +39,52 @@ public class HomeController {
 	}
 
 	@GetMapping(path = "/customer/login")
-	public String customerLogin(@ModelAttribute("login") Login login, Model model) {
+	public String customerLogin(@ModelAttribute("login") Login login, Model model, HttpSession session) {
+		if (session.getAttribute("loggedCustomer") != null) {
+			customerDashboardModel(model, ((Login) session.getAttribute("loggedCustomer")).getUsername());
+			return "dashboard";
+		}
 		customerLoginModel(model);
 		return "login";
 	}
 
 	@GetMapping(path = "/admin/login")
-	public String adminLogin(@ModelAttribute("login") Login login, Model model) {
+	public String adminLogin(@ModelAttribute("login") Login login, Model model, HttpSession session) {
+		if (session.getAttribute("loggedAdmin") != null) {
+			adminDashboardModel(model, ((Login) session.getAttribute("loggedAdmin")).getUsername());
+			return "dashboard";
+		}
 		adminLoginModel(model);
 		return "login";
 	}
 
-	@GetMapping(path = "/customer/logout")
+	@PostMapping(path = "/customer/logout")
 	public String customerLogout(@ModelAttribute("login") Login login, Model model, HttpSession session) {
+		logger.trace("\n\n\n\nSession Id[" + new Throwable().getStackTrace()[0].getMethodName() + "]: "
+				+ session.getId() + "\nLogged Admin: " + session.getAttribute("loggedAdmin") + "\n\n\n");
+
+		if (((Login) session.getAttribute("loggedAdmin")) == null) {
+			session.invalidate();
+		} else {
+			session.removeAttribute("loggedCustomer");
+		}
+
 		customerLoginModel(model);
 		model.addAttribute("message", "You have been successfully logged out.");
 		return "login";
 	}
 
-	@GetMapping(path = "/admin/logout")
+	@PostMapping(path = "/admin/logout")
 	public String adminLogout(@ModelAttribute("login") Login login, Model model, HttpSession session) {
+		logger.trace("\n\n\n\nSession Id[" + new Throwable().getStackTrace()[0].getMethodName() + "]: "
+				+ session.getId() + "\nLogged Customer: " + session.getAttribute("loggedCustomer") + "\n\n\n");
+
+		if (((Login) session.getAttribute("loggedCustomer")) == null) {
+			session.invalidate();
+		} else {
+			session.removeAttribute("loggedAdmin");
+		}
+
 		adminLoginModel(model);
 		model.addAttribute("message", "You have been successfully logged out.");
 		return "login";
@@ -73,6 +105,8 @@ public class HomeController {
 	@PostMapping(path = "/customer/signup")
 	public String customerSignup(@ModelAttribute("signup") @Valid Signup signup, BindingResult errors,
 			@ModelAttribute("login") Login login, Model model, HttpSession session) {
+		logger.trace("\n\n\n\nSession Id[" + new Throwable().getStackTrace()[0].getMethodName() + "]: "
+				+ session.getId() + "\n\n\n");
 
 		if (errors.hasErrors()) {
 			customerSignupModel(model);
@@ -100,6 +134,8 @@ public class HomeController {
 	@PostMapping(path = "/admin/signup")
 	public String adminSignup(@ModelAttribute("signup") @Valid Signup signup, BindingResult errors,
 			@ModelAttribute("login") Login login, Model model, HttpSession session) {
+		logger.trace("\n\n\n\nSession Id[" + new Throwable().getStackTrace()[0].getMethodName() + "]: "
+				+ session.getId() + "\n\n\n");
 
 		if (errors.hasErrors()) {
 			adminSignupModel(model);
@@ -127,6 +163,8 @@ public class HomeController {
 	@PostMapping(path = "/customer/dashboard")
 	public String customerDashboard(@ModelAttribute("login") @Valid Login login, BindingResult errors, Model model,
 			HttpSession session) {
+		logger.trace("\n\n\n\nSession Id[" + new Throwable().getStackTrace()[0].getMethodName() + "]: "
+				+ session.getId() + "\n\n\n");
 
 		if (errors.hasErrors()) {
 			customerLoginModel(model);
@@ -141,13 +179,21 @@ public class HomeController {
 			return "login";
 		}
 
-		customerDashboardModel(model);
+		if (((Login) (session.getAttribute("loggedCustomer"))) == null) {
+			login.setPassword("Not Available.");
+			login.setLoginTime(new Date().toString());
+			session.setAttribute("loggedCustomer", login);
+		}
+
+		customerDashboardModel(model, ((Login) (session.getAttribute("loggedCustomer"))).getUsername());
 		return "dashboard";
 	}
 
 	@PostMapping(path = "/admin/dashboard")
 	public String adminDashboard(@ModelAttribute("login") @Valid Login login, BindingResult errors, Model model,
 			HttpSession session) {
+		logger.trace("\n\n\n\nSession Id[" + new Throwable().getStackTrace()[0].getMethodName() + "]: "
+				+ session.getId() + "\n\n\n");
 
 		if (errors.hasErrors()) {
 			adminLoginModel(model);
@@ -162,7 +208,13 @@ public class HomeController {
 			return "login";
 		}
 
-		adminDashboardModel(model);
+		if (((Login) (session.getAttribute("loggedAdmin"))) == null) {
+			login.setPassword("Not Available.");
+			login.setLoginTime(new Date().toString());
+			session.setAttribute("loggedAdmin", login);
+		}
+
+		adminDashboardModel(model, ((Login) (session.getAttribute("loggedAdmin"))).getUsername());
 		return "dashboard";
 	}
 
@@ -185,12 +237,12 @@ public class HomeController {
 		signupModelConfiguration(model, "Admin", "#3429EA", adminBaseURL + "/signup", adminBaseURL + "/login", "post");
 	}
 
-	public void customerDashboardModel(Model model) {
-		dashboardModelConfiguration(model, "Customer", "#05AB23", customerBaseURL + "logout");
+	public void customerDashboardModel(Model model, String username) {
+		dashboardModelConfiguration(model, "Customer", "#05AB23", customerBaseURL + "logout", username);
 	}
 
-	public void adminDashboardModel(Model model) {
-		dashboardModelConfiguration(model, "Admin", "#3429EA", adminBaseURL + "logout");
+	public void adminDashboardModel(Model model, String username) {
+		dashboardModelConfiguration(model, "Admin", "#3429EA", adminBaseURL + "logout", username);
 	}
 
 	public void loginModelConfiguration(Model model, String userType, String headingColor, String onLogin,
@@ -215,14 +267,19 @@ public class HomeController {
 		model.addAttribute("errorMessage", "");
 	}
 
-	public void dashboardModelConfiguration(Model model, String userType, String headingColor, String onLogout) {
+	public void dashboardModelConfiguration(Model model, String userType, String headingColor, String onLogout,
+			String username) {
 		model.addAttribute("userType", userType);
 		model.addAttribute("headingColor", headingColor);
-		model.addAttribute("userName", "Default " + userType);
+		model.addAttribute("userName", username);
 		model.addAttribute("onLogout", onLogout);
 	}
 
 	public HomeController() {
 		super();
+		logger = Logger.getLogger(HomeController.class);
+		BasicConfigurator.configure();
+		logger.setLevel(Level.ALL);
+		logger.info("\n\n\n\n" + getClass().getName() + " has been created successfully.\n\n\n");
 	}
 }

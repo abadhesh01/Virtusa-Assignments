@@ -16,7 +16,7 @@ import lombok.Setter;
 public class Login {
 	@Size(min = 4, message = "Username length should not be less than 4 characters.")
 	private String username;
-	@Size(min = 4, message = "Password length should not be less than 6 characters.")
+	@Size(min = 6, message = "Password length should not be less than 6 characters.")
 	private String password;
 	private String loginTime;
 

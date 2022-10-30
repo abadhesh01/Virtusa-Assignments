@@ -40,7 +40,8 @@
 		</property>
 		<property name="annotatedClasses">
 			<list>
-
+				<value>pkg.base.entity.Customer</value>
+				<value>pkg.base.entity.Admin</value>
 			</list>
 		</property>
 	</bean>

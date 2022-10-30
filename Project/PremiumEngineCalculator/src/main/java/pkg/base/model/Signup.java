@@ -16,9 +16,9 @@ import lombok.Setter;
 public class Signup {
 	@Size(min = 4, message = "Username length should not be less than 4 characters.")
 	private String username;
-	@Size(min = 4, message = "New password length should not be less than 6 characters.")
+	@Size(min = 6, message = "New password length should not be less than 6 characters.")
 	private String newPassword;
-	@Size(min = 4, message = "Confirm password length should not be less than 6 characters.")
+	@Size(min = 6, message = "Confirm password length should not be less than 6 characters.")
 	private String confirmPassword;
 
 	@Override
