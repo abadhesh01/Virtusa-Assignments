@@ -18,6 +18,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import pkg.base.entity.InsurancePolicy;
+import pkg.base.model.InsurancePolicyModel;
 import pkg.base.model.Login;
 import pkg.base.model.Signup;
 import pkg.base.service.HomeService;
@@ -38,28 +40,36 @@ public class HomeController {
 		return "<strong>Execution successful! :)<br>[" + homeService.sampleServiceRequest() + "]</strong>";
 	}
 
+	// Customer Login.
 	@GetMapping(path = "/customer/login")
-	public String customerLogin(@ModelAttribute("login") Login login, Model model, HttpSession session) {
+	public String customerLogin(@ModelAttribute("login") Login login,
+			@ModelAttribute("policy") InsurancePolicyModel policyModel, Model model, HttpSession session) {
 		if (session.getAttribute("loggedCustomer") != null) {
 			customerDashboardModel(model, ((Login) session.getAttribute("loggedCustomer")).getUsername());
+			session.setAttribute("dashboardRequest", "customer");
 			return "dashboard";
 		}
 		customerLoginModel(model);
 		return "login";
 	}
 
+	// Admin Login.
 	@GetMapping(path = "/admin/login")
-	public String adminLogin(@ModelAttribute("login") Login login, Model model, HttpSession session) {
+	public String adminLogin(@ModelAttribute("login") Login login,
+			@ModelAttribute("policy") InsurancePolicyModel policyModel, Model model, HttpSession session) {
 		if (session.getAttribute("loggedAdmin") != null) {
 			adminDashboardModel(model, ((Login) session.getAttribute("loggedAdmin")).getUsername());
+			session.setAttribute("dashboardRequest", "admin");
 			return "dashboard";
 		}
 		adminLoginModel(model);
 		return "login";
 	}
 
+	// Customer Logout.
 	@PostMapping(path = "/customer/logout")
-	public String customerLogout(@ModelAttribute("login") Login login, Model model, HttpSession session) {
+	public String customerLogout(@ModelAttribute("login") Login login,
+			@ModelAttribute("policy") InsurancePolicyModel policyModel, Model model, HttpSession session) {
 		logger.trace("\n\n\n\nSession Id[" + new Throwable().getStackTrace()[0].getMethodName() + "]: "
 				+ session.getId() + "\nLogged Admin: " + session.getAttribute("loggedAdmin") + "\n\n\n");
 
@@ -74,8 +84,10 @@ public class HomeController {
 		return "login";
 	}
 
+	// Admin Logout.
 	@PostMapping(path = "/admin/logout")
-	public String adminLogout(@ModelAttribute("login") Login login, Model model, HttpSession session) {
+	public String adminLogout(@ModelAttribute("login") Login login,
+			@ModelAttribute("policy") InsurancePolicyModel policyModel, Model model, HttpSession session) {
 		logger.trace("\n\n\n\nSession Id[" + new Throwable().getStackTrace()[0].getMethodName() + "]: "
 				+ session.getId() + "\nLogged Customer: " + session.getAttribute("loggedCustomer") + "\n\n\n");
 
@@ -90,18 +102,21 @@ public class HomeController {
 		return "login";
 	}
 
+	// Customer sign up page.
 	@GetMapping(path = "/customer/signup/page")
 	public String customerSignupPage(@ModelAttribute("signup") Signup signup, Model model) {
 		customerSignupModel(model);
 		return "signup";
 	}
 
+	// Admin sign up page.
 	@GetMapping(path = "/admin/signup/page")
 	public String adminSignupPage(@ModelAttribute("signup") Signup signup, Model model) {
 		adminSignupModel(model);
 		return "signup";
 	}
 
+	// Customer Sign up.
 	@PostMapping(path = "/customer/signup")
 	public String customerSignup(@ModelAttribute("signup") @Valid Signup signup, BindingResult errors,
 			@ModelAttribute("login") Login login, Model model, HttpSession session) {
@@ -131,6 +146,7 @@ public class HomeController {
 		return "login";
 	}
 
+	// Admin sign up.
 	@PostMapping(path = "/admin/signup")
 	public String adminSignup(@ModelAttribute("signup") @Valid Signup signup, BindingResult errors,
 			@ModelAttribute("login") Login login, Model model, HttpSession session) {
@@ -161,8 +177,8 @@ public class HomeController {
 	}
 
 	@PostMapping(path = "/customer/dashboard")
-	public String customerDashboard(@ModelAttribute("login") @Valid Login login, BindingResult errors, Model model,
-			HttpSession session) {
+	public String customerDashboard(@ModelAttribute("login") @Valid Login login, BindingResult errors,
+			@ModelAttribute("policy") InsurancePolicyModel policyModel, Model model, HttpSession session) {
 		logger.trace("\n\n\n\nSession Id[" + new Throwable().getStackTrace()[0].getMethodName() + "]: "
 				+ session.getId() + "\n\n\n");
 
@@ -186,12 +202,13 @@ public class HomeController {
 		}
 
 		customerDashboardModel(model, ((Login) (session.getAttribute("loggedCustomer"))).getUsername());
+		session.setAttribute("dashboardRequest", "customer");
 		return "dashboard";
 	}
 
 	@PostMapping(path = "/admin/dashboard")
-	public String adminDashboard(@ModelAttribute("login") @Valid Login login, BindingResult errors, Model model,
-			HttpSession session) {
+	public String adminDashboard(@ModelAttribute("login") @Valid Login login, BindingResult errors,
+			@ModelAttribute("policy") InsurancePolicyModel policyModel, Model model, HttpSession session) {
 		logger.trace("\n\n\n\nSession Id[" + new Throwable().getStackTrace()[0].getMethodName() + "]: "
 				+ session.getId() + "\n\n\n");
 
@@ -215,6 +232,48 @@ public class HomeController {
 		}
 
 		adminDashboardModel(model, ((Login) (session.getAttribute("loggedAdmin"))).getUsername());
+		session.setAttribute("dashboardRequest", "admin");
+		return "dashboard";
+	}
+
+	// Adding a new insurance policy.
+	@GetMapping("/admin/addNewPolicy")
+	public String addNewPolicy(@ModelAttribute("policy") InsurancePolicyModel insurancePolicyModel,
+			@ModelAttribute("login") Login login, Model model, HttpSession session) {
+		if (session.getAttribute("loggedAdmin") == null) {
+			adminLoginModel(model);
+			return "login";
+		}
+		adminDashboardModel(model, ((Login) (session.getAttribute("loggedAdmin"))).getUsername());
+		session.setAttribute("dashboardRequest", "admin");
+		session.setAttribute("adminDashboardView", "addPolicy");
+		model.addAttribute("message", "");
+		model.addAttribute("messageColor", "#0B8DDD");
+		return "dashboard";
+	}
+
+	// Adding a new insurance policy.
+	@PostMapping("/admin/savePolicy")
+	public String savePolicy(@ModelAttribute("policy") InsurancePolicyModel insurancePolicyModel,
+			@ModelAttribute("login") Login login, Model model, HttpSession session) {
+		if (session.getAttribute("loggedAdmin") == null) {
+			adminLoginModel(model);
+			return "login";
+		}
+		adminDashboardModel(model, ((Login) (session.getAttribute("loggedAdmin"))).getUsername());
+		session.setAttribute("dashboardRequest", "admin");
+		session.setAttribute("adminDashboardView", "addPolicy");
+		String result = homeService.addNewPolicy(InsurancePolicy.builder()
+				.policyName(insurancePolicyModel.getPolicyName()).policyType(insurancePolicyModel.getPolicyType())
+				.periodOfCoverage(insurancePolicyModel.getPeriodOfCoverage())
+				.premiumAmount(insurancePolicyModel.getPremiumAmount()).price(insurancePolicyModel.getPrice()).build());
+		if (result.equals("Operation Successful")) {
+			model.addAttribute("message", "Policy has been added successfully.");
+			model.addAttribute("messageColor", "#0B8DDD");
+			return "dashboard";
+		}
+		model.addAttribute("message", result);
+		model.addAttribute("messageColor", "red");
 		return "dashboard";
 	}
 

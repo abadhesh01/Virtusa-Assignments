@@ -1,9 +1,13 @@
 package pkg.base.dao;
 
+import java.util.List;
+import java.util.UUID;
+
 import org.springframework.orm.hibernate5.HibernateTemplate;
 
 import pkg.base.entity.Admin;
 import pkg.base.entity.Customer;
+import pkg.base.entity.InsurancePolicy;
 
 public interface DAO {
 
@@ -28,4 +32,12 @@ public interface DAO {
 	// Finding a "Admin" by "username".
 	Admin getAdminByUsername(String username);
 
+	// Add a new policy.
+	public UUID addnewInsurancePolicy(InsurancePolicy insurancePolicy);
+	
+	// Get policy by policy name.
+	public List<InsurancePolicy> getInsurancePolicyByPolicyName(String policyName);
+	
+	// Get all policies.
+	public List<InsurancePolicy> getAllInsurancePolicies();
 }

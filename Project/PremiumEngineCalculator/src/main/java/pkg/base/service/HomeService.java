@@ -1,11 +1,13 @@
 package pkg.base.service;
 
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import pkg.base.dao.DAO;
 import pkg.base.entity.Admin;
 import pkg.base.entity.Customer;
+import pkg.base.entity.InsurancePolicy;
 import pkg.base.model.Login;
 import pkg.base.model.Signup;
 
@@ -71,6 +73,17 @@ public class HomeService {
 		}
 
 		return admin.getUsername();
+	}
+
+	// Adding a new policy to database.
+	public String addNewPolicy(InsurancePolicy insurancePolicy) {
+		insurancePolicy.setPolicyName(insurancePolicy.getPolicyName().replaceAll("\\s+", " ").trim());
+		List<InsurancePolicy> insurancePolicies = dao.getInsurancePolicyByPolicyName(insurancePolicy.getPolicyName());
+		if (!insurancePolicies.isEmpty()) {
+			return "A policy with the same name exists!<br>Please provide some different name.";
+		}
+		dao.addnewInsurancePolicy(insurancePolicy);
+		return "Operation Successful";
 	}
 
 }
