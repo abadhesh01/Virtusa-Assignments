@@ -307,6 +307,27 @@ public class HomeController {
 		return "dashboard";
 	}
 
+	// Deleting an insurance policy
+	@GetMapping("/admin/deletePolicy/{policyId}")
+	public String deletePolicy(@PathVariable("policyId") UUID policyId,
+			@ModelAttribute("policy") InsurancePolicyModel insurancePolicyModel, @ModelAttribute("login") Login login,
+			Model model, HttpSession session) {
+
+		if (session.getAttribute("loggedAdmin") == null) {
+			adminLoginModel(model);
+			return "login";
+		}
+
+		String result[] = homeService.deleteInsurancePolicyById(policyId);
+		adminDashboardModel(model, ((Login) (session.getAttribute("loggedAdmin"))).getUsername());
+		session.setAttribute("dashboardRequest", "admin");
+		session.setAttribute("adminDashboardView", "default");
+		model.addAttribute("dashboardMessageBarColor", result[0]);
+		model.addAttribute("dashboardMessageBar", result[1]);
+		session.setAttribute("insurancePolicies", homeService.getAllInsurancePolicies());
+		return "dashboard";
+	}
+
 	// Save new insurance policy.
 	@PostMapping("/admin/savePolicy")
 	public String savePolicy(@ModelAttribute("policy") InsurancePolicyModel insurancePolicyModel,
@@ -332,7 +353,7 @@ public class HomeController {
 		return "dashboard";
 	}
 
-	// Update a insurance policy.
+	// Save updated insurance policy.
 	@PostMapping("/admin/updatePolicy/savePolicyUpdate")
 	public String savePolicyUpdate(@ModelAttribute("policy") InsurancePolicyModel insurancePolicyModel,
 			@ModelAttribute("login") Login login, Model model, HttpSession session) {

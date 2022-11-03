@@ -9,7 +9,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>${userType}Dashboard</title>
+<title>${userType} Dashboard</title>
 <style type="text/css">
 a {
 	text-decoration: none;
@@ -17,19 +17,20 @@ a {
 
 #tableStyle {
 	font-family: sans-serif;
-	border-collapse: collapse;
+	border-collapse: separate;
 	width: 100%
 }
 
 #tableStyle td, #tableStyle th {
 	border: 1px solid black;
+	text-align: center;
 	padding: 8px;
 }
 
 #tableStyle th {
 	padding-top: 12px;
 	padding-bottom: 12px;
-	text-align: left;
+	text-align: center;
 	background-color: ${headingColor};
 	color:white;
 }
@@ -89,14 +90,10 @@ a {
 					%>
 					<li style="display: inline; float: center; padding: 8px;"><a
 						href="<%=adminBaseURL%>/showAllPolicies" style="color: white;"><strong>Show
-								all policies</strong></a></li>
+								all policies/Refresh</strong></a></li>
 					<li style="display: inline; float: center; padding: 8px;"><a
 						href="<%=adminBaseURL%>/addNewPolicy" style="color: white;"><strong>Add
 								new policy</strong></a></li>
-					<li style="display: inline; float: center; padding: 8px;"><a
-						href="#" style="color: white;"><strong>Edit policy</strong></a></li>
-					<li style="display: inline; float: center; padding: 8px;"><a
-						href="#" style="color: white;"><strong>Delete policy</strong></a></li>
 					<%
 					}
 					%>
@@ -106,7 +103,7 @@ a {
 					%>
 					<li style="display: inline; float: center; padding: 8px;"><a
 						href="<%=customerBaseURL%>/showAllPolicies" style="color: white;"><strong>Show
-								all policy</strong></a></li>
+								all policies/Refresh</strong></a></li>
 					<%
 					}
 					%>
@@ -141,7 +138,7 @@ a {
 					<th>Period of Coverage</th>
 					<th>Premium Amount</th>
 					<th>Price</th>
-					<th>Operation 1</th>
+					<th>Operations</th>
 				</tr>
 				<%
 				List<InsurancePolicy> insurancePolicies = (List<InsurancePolicy>) session.getAttribute("insurancePolicies");
@@ -155,7 +152,10 @@ a {
 					<td><%=policy.getPrice()%></td>
 					<td><a
 						href="<%=adminBaseURL%>/updatePolicy/<%=policy.getPolicyId()%>"><input
-							type="button" value="Update" style="color: ${headingColor}"></a></td>
+							type="button" value="Update" style="color: ${headingColor}"></a>				
+						<a
+						href="<%=adminBaseURL%>/deletePolicy/<%=policy.getPolicyId()%>"><input
+							type="button" value="Delete" style="color: ${headingColor}"></a></td>
 				</tr>
 				<%
 				}

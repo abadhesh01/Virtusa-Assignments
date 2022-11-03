@@ -97,6 +97,21 @@ public class HomeService {
 		return "Operation Successful";
 	}
 
+	// Deleting an existing insurance policy.
+	public String[] deleteInsurancePolicyById(UUID policyId) {
+		String result[] = new String[2];
+		if (dao.deletePolicyById(policyId) == true) {
+			result[0] = "#0B8DDD";
+			result[1] = "The policy with id=\"" + policyId + "\" has been deleted successfully.";
+			return result;
+		}
+
+		result[0] = "red";
+		result[1] = "The policy with id=\"" + policyId + "\" was not found!<br>"
+				+ "The policy might have been removed by anathor admin or does not exist.";
+		return result;
+	}
+
 	// Getting a insurance policy by id.
 	public InsurancePolicy getInsurancePolicyById(UUID policyId) {
 		return dao.getInsurancePolicyById(policyId);

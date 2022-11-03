@@ -55,6 +55,17 @@ public class DAOImpl implements DAO {
 		hibernateTemplate.saveOrUpdate(insurancePolicy);
 	}
 
+	// Delete an existing policy.
+	@Transactional
+	public boolean deletePolicyById(UUID policyId) {
+		InsurancePolicy policy = hibernateTemplate.get(InsurancePolicy.class, policyId);
+		if (policy != null) {
+			hibernateTemplate.delete(policy);
+			return true;
+		}
+		return false;
+	}
+
 	// Get policy by policy id.
 	public InsurancePolicy getInsurancePolicyById(UUID policyId) {
 		return hibernateTemplate.get(InsurancePolicy.class, policyId);
