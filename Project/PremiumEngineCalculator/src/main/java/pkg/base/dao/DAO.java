@@ -32,12 +32,15 @@ public interface DAO {
 	// Finding a "Admin" by "username".
 	Admin getAdminByUsername(String username);
 
-	// Add a new policy.
-	public UUID addnewInsurancePolicy(InsurancePolicy insurancePolicy);
+	// Add or update a policy.
+	void addOrUpdateInsurancePolicy(InsurancePolicy insurancePolicy);
+	
+	// Get policy by policy id.
+	InsurancePolicy getInsurancePolicyById(UUID policyId);
 	
 	// Get policy by policy name.
-	public List<InsurancePolicy> getInsurancePolicyByPolicyName(String policyName);
+	List<InsurancePolicy> getInsurancePolicyByPolicyName(String policyName);
 	
 	// Get all policies.
-	public List<InsurancePolicy> getAllInsurancePolicies();
+	List<InsurancePolicy> getAllInsurancePolicies();
 }

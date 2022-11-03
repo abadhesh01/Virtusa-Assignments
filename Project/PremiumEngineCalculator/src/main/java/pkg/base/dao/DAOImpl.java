@@ -49,10 +49,15 @@ public class DAOImpl implements DAO {
 		return hibernateTemplate.get(Admin.class, username);
 	}
 
-	// Add a new policy.
+	// Add or update a policy.
 	@Transactional
-	public UUID addnewInsurancePolicy(InsurancePolicy insurancePolicy) {
-		return (UUID) hibernateTemplate.save(insurancePolicy);
+	public void addOrUpdateInsurancePolicy(InsurancePolicy insurancePolicy) {
+		hibernateTemplate.saveOrUpdate(insurancePolicy);
+	}
+
+	// Get policy by policy id.
+	public InsurancePolicy getInsurancePolicyById(UUID policyId) {
+		return hibernateTemplate.get(InsurancePolicy.class, policyId);
 	}
 
 	// Get policy by policy name.

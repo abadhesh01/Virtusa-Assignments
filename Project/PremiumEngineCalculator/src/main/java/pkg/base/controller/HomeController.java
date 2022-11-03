@@ -1,6 +1,7 @@
 package pkg.base.controller;
 
 import java.util.Date;
+import java.util.UUID;
 
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
@@ -14,6 +15,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -47,6 +49,8 @@ public class HomeController {
 		if (session.getAttribute("loggedCustomer") != null) {
 			customerDashboardModel(model, ((Login) session.getAttribute("loggedCustomer")).getUsername());
 			session.setAttribute("dashboardRequest", "customer");
+			session.setAttribute("customerDashboardView", "default");
+			session.setAttribute("insurancePolicies", homeService.getAllInsurancePolicies());
 			return "dashboard";
 		}
 		customerLoginModel(model);
@@ -60,6 +64,8 @@ public class HomeController {
 		if (session.getAttribute("loggedAdmin") != null) {
 			adminDashboardModel(model, ((Login) session.getAttribute("loggedAdmin")).getUsername());
 			session.setAttribute("dashboardRequest", "admin");
+			session.setAttribute("adminDashboardView", "default");
+			session.setAttribute("insurancePolicies", homeService.getAllInsurancePolicies());
 			return "dashboard";
 		}
 		adminLoginModel(model);
@@ -176,6 +182,7 @@ public class HomeController {
 		return "login";
 	}
 
+	// Display customer's dashboard.
 	@PostMapping(path = "/customer/dashboard")
 	public String customerDashboard(@ModelAttribute("login") @Valid Login login, BindingResult errors,
 			@ModelAttribute("policy") InsurancePolicyModel policyModel, Model model, HttpSession session) {
@@ -203,9 +210,15 @@ public class HomeController {
 
 		customerDashboardModel(model, ((Login) (session.getAttribute("loggedCustomer"))).getUsername());
 		session.setAttribute("dashboardRequest", "customer");
+		session.setAttribute("customerDashboardView", "default");
+		if (session.getAttribute("adminDashboardView") == null) {
+			session.setAttribute("adminDashboardView", "default");
+		}
+		session.setAttribute("insurancePolicies", homeService.getAllInsurancePolicies());
 		return "dashboard";
 	}
 
+	// Display admin's dashboard.
 	@PostMapping(path = "/admin/dashboard")
 	public String adminDashboard(@ModelAttribute("login") @Valid Login login, BindingResult errors,
 			@ModelAttribute("policy") InsurancePolicyModel policyModel, Model model, HttpSession session) {
@@ -233,6 +246,11 @@ public class HomeController {
 
 		adminDashboardModel(model, ((Login) (session.getAttribute("loggedAdmin"))).getUsername());
 		session.setAttribute("dashboardRequest", "admin");
+		session.setAttribute("adminDashboardView", "default");
+		if (session.getAttribute("customerDashboardView") == null) {
+			session.setAttribute("customerDashboardView", "default");
+		}
+		session.setAttribute("insurancePolicies", homeService.getAllInsurancePolicies());
 		return "dashboard";
 	}
 
@@ -252,7 +270,44 @@ public class HomeController {
 		return "dashboard";
 	}
 
-	// Adding a new insurance policy.
+	// Updating an existing policy.
+	@GetMapping("/admin/updatePolicy/{policyId}")
+	public String updatePolicy(@PathVariable("policyId") UUID policyId,
+			@ModelAttribute("policy") InsurancePolicyModel insurancePolicyModel, @ModelAttribute("login") Login login,
+			Model model, HttpSession session) {
+		if (session.getAttribute("loggedAdmin") == null) {
+			adminLoginModel(model);
+			return "login";
+		}
+
+		adminDashboardModel(model, ((Login) (session.getAttribute("loggedAdmin"))).getUsername());
+
+		InsurancePolicy insurancePolicy = homeService.getInsurancePolicyById(policyId);
+		if (insurancePolicy == null) {
+			session.setAttribute("dashboardRequest", "admin");
+			session.setAttribute("adminDashboardView", "default");
+			session.setAttribute("insurancePolicies", homeService.getAllInsurancePolicies());
+			model.addAttribute("dashboardMessageBar", "Policy with id=\"" + policyId + "\" was not found!"
+					+ "<br>The policy might have been removed by anathor admin or does not exist.");
+			model.addAttribute("dashboardMessageBarColor", "red");
+			return "dashboard";
+		}
+
+		insurancePolicyModel.setPolicyId(insurancePolicy.getPolicyId());
+		insurancePolicyModel.setPolicyName(insurancePolicy.getPolicyName());
+		insurancePolicyModel.setPolicyType(insurancePolicy.getPolicyType());
+		insurancePolicyModel.setPeriodOfCoverage(insurancePolicy.getPeriodOfCoverage());
+		insurancePolicyModel.setPremiumAmount(insurancePolicy.getPremiumAmount());
+		insurancePolicyModel.setPrice(insurancePolicy.getPrice());
+
+		session.setAttribute("dashboardRequest", "admin");
+		session.setAttribute("adminDashboardView", "updatePolicy");
+		model.addAttribute("message", "");
+		model.addAttribute("messageColor", "#0B8DDD");
+		return "dashboard";
+	}
+
+	// Save new insurance policy.
 	@PostMapping("/admin/savePolicy")
 	public String savePolicy(@ModelAttribute("policy") InsurancePolicyModel insurancePolicyModel,
 			@ModelAttribute("login") Login login, Model model, HttpSession session) {
@@ -263,7 +318,7 @@ public class HomeController {
 		adminDashboardModel(model, ((Login) (session.getAttribute("loggedAdmin"))).getUsername());
 		session.setAttribute("dashboardRequest", "admin");
 		session.setAttribute("adminDashboardView", "addPolicy");
-		String result = homeService.addNewPolicy(InsurancePolicy.builder()
+		String result = homeService.addOrUpdatePolicy(InsurancePolicy.builder()
 				.policyName(insurancePolicyModel.getPolicyName()).policyType(insurancePolicyModel.getPolicyType())
 				.periodOfCoverage(insurancePolicyModel.getPeriodOfCoverage())
 				.premiumAmount(insurancePolicyModel.getPremiumAmount()).price(insurancePolicyModel.getPrice()).build());
@@ -274,6 +329,79 @@ public class HomeController {
 		}
 		model.addAttribute("message", result);
 		model.addAttribute("messageColor", "red");
+		return "dashboard";
+	}
+
+	// Update a insurance policy.
+	@PostMapping("/admin/updatePolicy/savePolicyUpdate")
+	public String savePolicyUpdate(@ModelAttribute("policy") InsurancePolicyModel insurancePolicyModel,
+			@ModelAttribute("login") Login login, Model model, HttpSession session) {
+		if (session.getAttribute("loggedAdmin") == null) {
+			adminLoginModel(model);
+			return "login";
+		}
+		adminDashboardModel(model, ((Login) (session.getAttribute("loggedAdmin"))).getUsername());
+		session.setAttribute("dashboardRequest", "admin");
+
+		InsurancePolicy insurancePolicy = homeService.getInsurancePolicyById(insurancePolicyModel.getPolicyId());
+		if (insurancePolicy == null) {
+			session.setAttribute("dashboardRequest", "admin");
+			session.setAttribute("adminDashboardView", "default");
+			session.setAttribute("insurancePolicies", homeService.getAllInsurancePolicies());
+			model.addAttribute("dashboardMessageBar",
+					"Policy with id=\"" + insurancePolicyModel.getPolicyId() + "\" was not found!"
+							+ "<br>The policy might have been removed by anathor admin or does not exist.");
+			model.addAttribute("dashboardMessageBarColor", "red");
+			return "dashboard";
+		}
+
+		insurancePolicy.setPolicyName(insurancePolicyModel.getPolicyName());
+		insurancePolicy.setPolicyType(insurancePolicyModel.getPolicyType());
+		insurancePolicy.setPeriodOfCoverage(insurancePolicyModel.getPeriodOfCoverage());
+		insurancePolicy.setPremiumAmount(insurancePolicyModel.getPremiumAmount());
+		insurancePolicy.setPrice(insurancePolicyModel.getPrice());
+
+		String result = homeService.addOrUpdatePolicy(insurancePolicy);
+		if (result.equals("Operation Successful")) {
+			session.setAttribute("adminDashboardView", "default");
+			session.setAttribute("insurancePolicies", homeService.getAllInsurancePolicies());
+			model.addAttribute("dashboardMessageBar", "Policy with id=\"" + insurancePolicyModel.getPolicyId() + "\" "
+					+ "has been updated successfully.");
+			model.addAttribute("dashboardMessageBarColor", "#0B8DDD");
+			return "dashboard";
+		}
+
+		session.setAttribute("adminDashboardView", "updatePolicy");
+		model.addAttribute("message", result);
+		model.addAttribute("messageColor", "red");
+		return "dashboard";
+	}
+
+	@GetMapping("/customer/showAllPolicies")
+	public String showAllPoliciesToCustomer(@ModelAttribute("policy") InsurancePolicyModel insurancePolicyModel,
+			@ModelAttribute("login") Login login, Model model, HttpSession session) {
+		if (session.getAttribute("loggedCustomer") == null) {
+			customerLoginModel(model);
+			return "login";
+		}
+		customerDashboardModel(model, ((Login) (session.getAttribute("loggedCustomer"))).getUsername());
+		session.setAttribute("dashboardRequest", "customer");
+		session.setAttribute("customerDashboardView", "default");
+		session.setAttribute("insurancePolicies", homeService.getAllInsurancePolicies());
+		return "dashboard";
+	}
+
+	@GetMapping("/admin/showAllPolicies")
+	public String showAllPoliciesToAdmin(@ModelAttribute("policy") InsurancePolicyModel insurancePolicyModel,
+			@ModelAttribute("login") Login login, Model model, HttpSession session) {
+		if (session.getAttribute("loggedAdmin") == null) {
+			adminLoginModel(model);
+			return "login";
+		}
+		adminDashboardModel(model, ((Login) (session.getAttribute("loggedAdmin"))).getUsername());
+		session.setAttribute("dashboardRequest", "admin");
+		session.setAttribute("adminDashboardView", "default");
+		session.setAttribute("insurancePolicies", homeService.getAllInsurancePolicies());
 		return "dashboard";
 	}
 
@@ -298,10 +426,15 @@ public class HomeController {
 
 	public void customerDashboardModel(Model model, String username) {
 		dashboardModelConfiguration(model, "Customer", "#05AB23", customerBaseURL + "logout", username);
+		model.addAttribute("dashboardMessageBar", "");
+		model.addAttribute("dashboardMessageBarColor", "White");
 	}
 
 	public void adminDashboardModel(Model model, String username) {
 		dashboardModelConfiguration(model, "Admin", "#3429EA", adminBaseURL + "logout", username);
+		model.addAttribute("dashboardMessageBar", "");
+		model.addAttribute("dashboardMessageBarColor", "White");
+
 	}
 
 	public void loginModelConfiguration(Model model, String userType, String headingColor, String onLogin,

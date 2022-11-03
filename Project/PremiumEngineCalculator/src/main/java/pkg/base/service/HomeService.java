@@ -1,6 +1,8 @@
 package pkg.base.service;
 
 import java.util.List;
+import java.util.UUID;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -24,7 +26,8 @@ public class HomeService {
 	// Validating and creating new customer account.
 	public String validateCustomerSignup(Signup signup) {
 
-		if (dao.getCustomerByUsername(signup.getUsername()) != null) {
+		if (dao.getCustomerByUsername(signup.getUsername()) != null
+				&& dao.getAdminByUsername(signup.getUsername()) != null) {
 			return "Username already exists!";
 		}
 
@@ -35,7 +38,8 @@ public class HomeService {
 	// Validating and creating new admin account.
 	public String validateAdminSignup(Signup signup) {
 
-		if (dao.getAdminByUsername(signup.getUsername()) != null) {
+		if (dao.getAdminByUsername(signup.getUsername()) != null
+				&& dao.getCustomerByUsername(signup.getUsername()) != null) {
 			return "Username already exists!";
 		}
 
@@ -75,15 +79,31 @@ public class HomeService {
 		return admin.getUsername();
 	}
 
-	// Adding a new policy to database.
-	public String addNewPolicy(InsurancePolicy insurancePolicy) {
+	// Adding or updating a policy to database.
+	public String addOrUpdatePolicy(InsurancePolicy insurancePolicy) {
+
 		insurancePolicy.setPolicyName(insurancePolicy.getPolicyName().replaceAll("\\s+", " ").trim());
+
 		List<InsurancePolicy> insurancePolicies = dao.getInsurancePolicyByPolicyName(insurancePolicy.getPolicyName());
-		if (!insurancePolicies.isEmpty()) {
+
+		if (!insurancePolicies.isEmpty()
+				&& insurancePolicies.get(0).getPolicyName().equals(insurancePolicy.getPolicyName())
+				&& !insurancePolicies.get(0).getPolicyId().equals(insurancePolicy.getPolicyId())) {
 			return "A policy with the same name exists!<br>Please provide some different name.";
 		}
-		dao.addnewInsurancePolicy(insurancePolicy);
+
+		dao.addOrUpdateInsurancePolicy(insurancePolicy);
+
 		return "Operation Successful";
 	}
 
+	// Getting a insurance policy by id.
+	public InsurancePolicy getInsurancePolicyById(UUID policyId) {
+		return dao.getInsurancePolicyById(policyId);
+	}
+
+	// Getting all the insurance policies.
+	public List<InsurancePolicy> getAllInsurancePolicies() {
+		return dao.getAllInsurancePolicies();
+	}
 }
