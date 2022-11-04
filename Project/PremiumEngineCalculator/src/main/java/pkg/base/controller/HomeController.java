@@ -1,5 +1,7 @@
 package pkg.base.controller;
 
+import java.io.UnsupportedEncodingException;
+import java.util.Base64;
 import java.util.Date;
 import java.util.UUID;
 
@@ -46,6 +48,10 @@ public class HomeController {
 	@GetMapping(path = "/customer/login")
 	public String customerLogin(@ModelAttribute("login") Login login,
 			@ModelAttribute("policy") InsurancePolicyModel policyModel, Model model, HttpSession session) {
+
+		logger.trace("\n\n\n\nSession Id[" + new Throwable().getStackTrace()[0].getMethodName() + "]: "
+				+ session.getId() + "\nSession Creation Time: " + session.getCreationTime() + "\n\n\n");
+
 		if (session.getAttribute("loggedCustomer") != null) {
 			customerDashboardModel(model, ((Login) session.getAttribute("loggedCustomer")).getUsername());
 			session.setAttribute("dashboardRequest", "customer");
@@ -61,6 +67,10 @@ public class HomeController {
 	@GetMapping(path = "/admin/login")
 	public String adminLogin(@ModelAttribute("login") Login login,
 			@ModelAttribute("policy") InsurancePolicyModel policyModel, Model model, HttpSession session) {
+
+		logger.trace("\n\n\n\nSession Id[" + new Throwable().getStackTrace()[0].getMethodName() + "]: "
+				+ session.getId() + "\nSession Creation Time: " + session.getCreationTime() + "\n\n\n");
+
 		if (session.getAttribute("loggedAdmin") != null) {
 			adminDashboardModel(model, ((Login) session.getAttribute("loggedAdmin")).getUsername());
 			session.setAttribute("dashboardRequest", "admin");
@@ -76,8 +86,10 @@ public class HomeController {
 	@PostMapping(path = "/customer/logout")
 	public String customerLogout(@ModelAttribute("login") Login login,
 			@ModelAttribute("policy") InsurancePolicyModel policyModel, Model model, HttpSession session) {
+
 		logger.trace("\n\n\n\nSession Id[" + new Throwable().getStackTrace()[0].getMethodName() + "]: "
-				+ session.getId() + "\nLogged Admin: " + session.getAttribute("loggedAdmin") + "\n\n\n");
+				+ session.getId() + "\nLogged Admin: " + session.getAttribute("loggedAdmin")
+				+ "\nSession Creation Time: " + session.getCreationTime() + "\n\n\n");
 
 		if (((Login) session.getAttribute("loggedAdmin")) == null) {
 			session.invalidate();
@@ -94,8 +106,10 @@ public class HomeController {
 	@PostMapping(path = "/admin/logout")
 	public String adminLogout(@ModelAttribute("login") Login login,
 			@ModelAttribute("policy") InsurancePolicyModel policyModel, Model model, HttpSession session) {
+
 		logger.trace("\n\n\n\nSession Id[" + new Throwable().getStackTrace()[0].getMethodName() + "]: "
-				+ session.getId() + "\nLogged Customer: " + session.getAttribute("loggedCustomer") + "\n\n\n");
+				+ session.getId() + "\nLogged Customer: " + session.getAttribute("loggedCustomer")
+				+ "\nSession Creation Time: " + session.getCreationTime() + "\n\n\n");
 
 		if (((Login) session.getAttribute("loggedCustomer")) == null) {
 			session.invalidate();
@@ -110,14 +124,22 @@ public class HomeController {
 
 	// Customer sign up page.
 	@GetMapping(path = "/customer/signup/page")
-	public String customerSignupPage(@ModelAttribute("signup") Signup signup, Model model) {
+	public String customerSignupPage(@ModelAttribute("signup") Signup signup, Model model, HttpSession session) {
+
+		logger.trace("\n\n\n\nSession Id[" + new Throwable().getStackTrace()[0].getMethodName() + "]: "
+				+ session.getId() + "\nSession Creation Time: " + session.getCreationTime() + "\n\n\n");
+
 		customerSignupModel(model);
 		return "signup";
 	}
 
 	// Admin sign up page.
 	@GetMapping(path = "/admin/signup/page")
-	public String adminSignupPage(@ModelAttribute("signup") Signup signup, Model model) {
+	public String adminSignupPage(@ModelAttribute("signup") Signup signup, Model model, HttpSession session) {
+
+		logger.trace("\n\n\n\nSession Id[" + new Throwable().getStackTrace()[0].getMethodName() + "]: "
+				+ session.getId() + "\nSession Creation Time: " + session.getCreationTime() + "\n\n\n");
+
 		adminSignupModel(model);
 		return "signup";
 	}
@@ -125,9 +147,11 @@ public class HomeController {
 	// Customer Sign up.
 	@PostMapping(path = "/customer/signup")
 	public String customerSignup(@ModelAttribute("signup") @Valid Signup signup, BindingResult errors,
-			@ModelAttribute("login") Login login, Model model, HttpSession session) {
+			@ModelAttribute("login") Login login, Model model, HttpSession session)
+			throws UnsupportedEncodingException {
+
 		logger.trace("\n\n\n\nSession Id[" + new Throwable().getStackTrace()[0].getMethodName() + "]: "
-				+ session.getId() + "\n\n\n");
+				+ session.getId() + "\nSession Creation Time: " + session.getCreationTime() + "\n\n\n");
 
 		if (errors.hasErrors()) {
 			customerSignupModel(model);
@@ -140,6 +164,8 @@ public class HomeController {
 			return "signup";
 		}
 
+		signup.setConfirmPassword(Base64.getEncoder().encodeToString(signup.getConfirmPassword().getBytes("UTF-8")));
+		signup.setNewPassword(signup.getConfirmPassword());
 		String result = homeService.validateCustomerSignup(signup);
 		if (!result.equals(signup.getUsername())) {
 			customerSignupModel(model);
@@ -155,9 +181,11 @@ public class HomeController {
 	// Admin sign up.
 	@PostMapping(path = "/admin/signup")
 	public String adminSignup(@ModelAttribute("signup") @Valid Signup signup, BindingResult errors,
-			@ModelAttribute("login") Login login, Model model, HttpSession session) {
+			@ModelAttribute("login") Login login, Model model, HttpSession session)
+			throws UnsupportedEncodingException {
+
 		logger.trace("\n\n\n\nSession Id[" + new Throwable().getStackTrace()[0].getMethodName() + "]: "
-				+ session.getId() + "\n\n\n");
+				+ session.getId() + "\nSession Creation Time: " + session.getCreationTime() + "\n\n\n");
 
 		if (errors.hasErrors()) {
 			adminSignupModel(model);
@@ -170,6 +198,8 @@ public class HomeController {
 			return "signup";
 		}
 
+		signup.setConfirmPassword(Base64.getEncoder().encodeToString(signup.getConfirmPassword().getBytes("UTF-8")));
+		signup.setNewPassword(signup.getConfirmPassword());
 		String result = homeService.validateAdminSignup(signup);
 		if (!result.equals(signup.getUsername())) {
 			adminSignupModel(model);
@@ -185,15 +215,18 @@ public class HomeController {
 	// Display customer's dashboard.
 	@PostMapping(path = "/customer/dashboard")
 	public String customerDashboard(@ModelAttribute("login") @Valid Login login, BindingResult errors,
-			@ModelAttribute("policy") InsurancePolicyModel policyModel, Model model, HttpSession session) {
+			@ModelAttribute("policy") InsurancePolicyModel policyModel, Model model, HttpSession session)
+			throws UnsupportedEncodingException {
+
 		logger.trace("\n\n\n\nSession Id[" + new Throwable().getStackTrace()[0].getMethodName() + "]: "
-				+ session.getId() + "\n\n\n");
+				+ session.getId() + "\nSession Creation Time: " + session.getCreationTime() + "\n\n\n");
 
 		if (errors.hasErrors()) {
 			customerLoginModel(model);
 			return "login";
 		}
 
+		login.setPassword(Base64.getEncoder().encodeToString(login.getPassword().getBytes("UTF-8")));
 		String result = homeService.validateCustomerLogin(login);
 
 		if (!result.equals(login.getUsername())) {
@@ -221,15 +254,18 @@ public class HomeController {
 	// Display admin's dashboard.
 	@PostMapping(path = "/admin/dashboard")
 	public String adminDashboard(@ModelAttribute("login") @Valid Login login, BindingResult errors,
-			@ModelAttribute("policy") InsurancePolicyModel policyModel, Model model, HttpSession session) {
+			@ModelAttribute("policy") InsurancePolicyModel policyModel, Model model, HttpSession session)
+			throws UnsupportedEncodingException {
+
 		logger.trace("\n\n\n\nSession Id[" + new Throwable().getStackTrace()[0].getMethodName() + "]: "
-				+ session.getId() + "\n\n\n");
+				+ session.getId() + "\nSession Creation Time: " + session.getCreationTime() + "\n\n\n");
 
 		if (errors.hasErrors()) {
 			adminLoginModel(model);
 			return "login";
 		}
 
+		login.setPassword(Base64.getEncoder().encodeToString(login.getPassword().getBytes("UTF-8")));
 		String result = homeService.validateAdminLogin(login);
 
 		if (!result.equals(login.getUsername())) {
@@ -258,6 +294,10 @@ public class HomeController {
 	@GetMapping("/admin/addNewPolicy")
 	public String addNewPolicy(@ModelAttribute("policy") InsurancePolicyModel insurancePolicyModel,
 			@ModelAttribute("login") Login login, Model model, HttpSession session) {
+
+		logger.trace("\n\n\n\nSession Id[" + new Throwable().getStackTrace()[0].getMethodName() + "]: "
+				+ session.getId() + "\nSession Creation Time: " + session.getCreationTime() + "\n\n\n");
+
 		if (session.getAttribute("loggedAdmin") == null) {
 			adminLoginModel(model);
 			return "login";
@@ -275,6 +315,10 @@ public class HomeController {
 	public String updatePolicy(@PathVariable("policyId") UUID policyId,
 			@ModelAttribute("policy") InsurancePolicyModel insurancePolicyModel, @ModelAttribute("login") Login login,
 			Model model, HttpSession session) {
+
+		logger.trace("\n\n\n\nSession Id[" + new Throwable().getStackTrace()[0].getMethodName() + "]: "
+				+ session.getId() + "\nSession Creation Time: " + session.getCreationTime() + "\n\n\n");
+
 		if (session.getAttribute("loggedAdmin") == null) {
 			adminLoginModel(model);
 			return "login";
@@ -313,6 +357,9 @@ public class HomeController {
 			@ModelAttribute("policy") InsurancePolicyModel insurancePolicyModel, @ModelAttribute("login") Login login,
 			Model model, HttpSession session) {
 
+		logger.trace("\n\n\n\nSession Id[" + new Throwable().getStackTrace()[0].getMethodName() + "]: "
+				+ session.getId() + "\nSession Creation Time: " + session.getCreationTime() + "\n\n\n");
+
 		if (session.getAttribute("loggedAdmin") == null) {
 			adminLoginModel(model);
 			return "login";
@@ -332,10 +379,15 @@ public class HomeController {
 	@PostMapping("/admin/savePolicy")
 	public String savePolicy(@ModelAttribute("policy") InsurancePolicyModel insurancePolicyModel,
 			@ModelAttribute("login") Login login, Model model, HttpSession session) {
+
+		logger.trace("\n\n\n\nSession Id[" + new Throwable().getStackTrace()[0].getMethodName() + "]: "
+				+ session.getId() + "\nSession Creation Time: " + session.getCreationTime() + "\n\n\n");
+
 		if (session.getAttribute("loggedAdmin") == null) {
 			adminLoginModel(model);
 			return "login";
 		}
+
 		adminDashboardModel(model, ((Login) (session.getAttribute("loggedAdmin"))).getUsername());
 		session.setAttribute("dashboardRequest", "admin");
 		session.setAttribute("adminDashboardView", "addPolicy");
@@ -357,6 +409,10 @@ public class HomeController {
 	@PostMapping("/admin/updatePolicy/savePolicyUpdate")
 	public String savePolicyUpdate(@ModelAttribute("policy") InsurancePolicyModel insurancePolicyModel,
 			@ModelAttribute("login") Login login, Model model, HttpSession session) {
+
+		logger.trace("\n\n\n\nSession Id[" + new Throwable().getStackTrace()[0].getMethodName() + "]: "
+				+ session.getId() + "\nSession Creation Time: " + session.getCreationTime() + "\n\n\n");
+
 		if (session.getAttribute("loggedAdmin") == null) {
 			adminLoginModel(model);
 			return "login";
@@ -398,9 +454,14 @@ public class HomeController {
 		return "dashboard";
 	}
 
+	// Display/Refresh all policies in customer's dashboard.
 	@GetMapping("/customer/showAllPolicies")
 	public String showAllPoliciesToCustomer(@ModelAttribute("policy") InsurancePolicyModel insurancePolicyModel,
 			@ModelAttribute("login") Login login, Model model, HttpSession session) {
+
+		logger.trace("\n\n\n\nSession Id[" + new Throwable().getStackTrace()[0].getMethodName() + "]: "
+				+ session.getId() + "\nSession Creation Time: " + session.getCreationTime() + "\n\n\n");
+
 		if (session.getAttribute("loggedCustomer") == null) {
 			customerLoginModel(model);
 			return "login";
@@ -412,9 +473,14 @@ public class HomeController {
 		return "dashboard";
 	}
 
+	// Display/Refresh all policies in admin's dashboard.
 	@GetMapping("/admin/showAllPolicies")
 	public String showAllPoliciesToAdmin(@ModelAttribute("policy") InsurancePolicyModel insurancePolicyModel,
 			@ModelAttribute("login") Login login, Model model, HttpSession session) {
+
+		logger.trace("\n\n\n\nSession Id[" + new Throwable().getStackTrace()[0].getMethodName() + "]: "
+				+ session.getId() + "\nSession Creation Time: " + session.getCreationTime() + "\n\n\n");
+
 		if (session.getAttribute("loggedAdmin") == null) {
 			adminLoginModel(model);
 			return "login";

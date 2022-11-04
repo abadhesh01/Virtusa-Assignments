@@ -1,5 +1,7 @@
 package pkg.base.service;
 
+import java.io.UnsupportedEncodingException;
+import java.util.Base64;
 import java.util.List;
 import java.util.UUID;
 
@@ -17,44 +19,52 @@ import pkg.base.model.Signup;
 public class HomeService {
 
 	@Autowired
-	DAO dao;
+	private DAO dao;
 
 	public String sampleServiceRequest() {
 		return dao.getHibernateTemplate().toString();
 	}
 
 	// Validating and creating new customer account.
-	public String validateCustomerSignup(Signup signup) {
+	public String validateCustomerSignup(Signup signup) throws UnsupportedEncodingException {
 
 		if (dao.getCustomerByUsername(signup.getUsername()) != null
-				&& dao.getAdminByUsername(signup.getUsername()) != null) {
+				|| dao.getAdminByUsername(signup.getUsername()) != null) {
 			return "Username already exists!";
 		}
+
+		signup.setConfirmPassword(Base64.getEncoder().encodeToString(signup.getConfirmPassword().getBytes("UTF-8")));
+		signup.setNewPassword(signup.getConfirmPassword());
 
 		return dao.createNewCustomerAccount(
 				Customer.builder().username(signup.getUsername()).password(signup.getNewPassword()).build());
 	}
 
 	// Validating and creating new admin account.
-	public String validateAdminSignup(Signup signup) {
+	public String validateAdminSignup(Signup signup) throws UnsupportedEncodingException {
 
 		if (dao.getAdminByUsername(signup.getUsername()) != null
-				&& dao.getCustomerByUsername(signup.getUsername()) != null) {
+				|| dao.getCustomerByUsername(signup.getUsername()) != null) {
 			return "Username already exists!";
 		}
+
+		signup.setConfirmPassword(Base64.getEncoder().encodeToString(signup.getConfirmPassword().getBytes("UTF-8")));
+		signup.setNewPassword(signup.getConfirmPassword());
 
 		return dao.createNewAdminAccount(
 				Admin.builder().username(signup.getUsername()).password(signup.getNewPassword()).build());
 	}
 
 	// Validating customer login.
-	public String validateCustomerLogin(Login login) {
+	public String validateCustomerLogin(Login login) throws UnsupportedEncodingException {
 
 		Customer customer = dao.getCustomerByUsername(login.getUsername());
 
 		if (customer == null) {
 			return "Username does not exist!";
 		}
+
+		login.setPassword(Base64.getEncoder().encodeToString(login.getPassword().getBytes("UTF-8")));
 
 		if (!customer.getPassword().equals(login.getPassword())) {
 			return "Invalid password!";
@@ -64,13 +74,15 @@ public class HomeService {
 	}
 
 	// Validating admin login.
-	public String validateAdminLogin(Login login) {
+	public String validateAdminLogin(Login login) throws UnsupportedEncodingException {
 
 		Admin admin = dao.getAdminByUsername(login.getUsername());
 
 		if (admin == null) {
 			return "Username does not exist!";
 		}
+
+		login.setPassword(Base64.getEncoder().encodeToString(login.getPassword().getBytes("UTF-8")));
 
 		if (!admin.getPassword().equals(login.getPassword())) {
 			return "Invalid password!";
