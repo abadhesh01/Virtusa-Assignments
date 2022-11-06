@@ -12,6 +12,7 @@ import pkg.base.dao.DAO;
 import pkg.base.entity.Admin;
 import pkg.base.entity.Customer;
 import pkg.base.entity.InsurancePolicy;
+import pkg.base.model.InsurancePolicyModel;
 import pkg.base.model.Login;
 import pkg.base.model.Signup;
 
@@ -132,5 +133,70 @@ public class HomeService {
 	// Getting all the insurance policies.
 	public List<InsurancePolicy> getAllInsurancePolicies() {
 		return dao.getAllInsurancePolicies();
+	}
+
+	// Calculating premium.
+	public double calculatePremiumCost(InsurancePolicyModel insurancePolicyModel) {
+
+		double finalPrice = 0.0;
+		String policyType = insurancePolicyModel.getPolicyType();
+
+		if (policyType.equals("Life Insurance") || policyType.equals("Medical Insurance")) {
+
+			if (insurancePolicyModel.getPersonSmokes().equals("Yes")) {
+				if (policyType.equals("Life Insurance")) {
+					finalPrice += (insurancePolicyModel.getPrice() * 0.10);
+				} else if (policyType.equals("Medical Insurance")) {
+					finalPrice += (insurancePolicyModel.getPrice() * 0.05);
+				}
+			}
+
+			if (insurancePolicyModel.getPersonDrinks().equals("Yes")) {
+				if (policyType.equals("Life Insurance")) {
+					finalPrice += (insurancePolicyModel.getPrice() * 0.20);
+				} else if (policyType.equals("Medical Insurance")) {
+					finalPrice += (insurancePolicyModel.getPrice() * 0.10);
+				}
+			}
+
+			if (insurancePolicyModel.getPersonHasSeriousDisease().equals("Yes")) {
+				if (policyType.equals("Life Insurance")) {
+					finalPrice += (insurancePolicyModel.getPrice() * 0.30);
+				} else if (policyType.equals("Medical Insurance")) {
+					finalPrice += (insurancePolicyModel.getPrice() * 0.15);
+				}
+			}
+
+			String personStage = insurancePolicyModel.getPersonStage();
+
+			if (personStage.equals("Young")) {
+				finalPrice -= (insurancePolicyModel.getPrice() * 0.15);
+			} else if (personStage.equals("Old")) {
+				finalPrice -= (insurancePolicyModel.getPrice() * 0.40);
+			}
+
+			finalPrice += insurancePolicyModel.getPrice();
+			return finalPrice;
+		}
+
+		else if (policyType.equals("Vehicle Insurance")) {
+
+			String vehicleType = insurancePolicyModel.getVehicleType();
+			if (vehicleType.equals("Two Wheeler")) {
+				finalPrice -= (insurancePolicyModel.getPrice() * 0.07);
+			} else if (vehicleType.equals("Three Wheeler")) {
+				finalPrice -= (insurancePolicyModel.getPrice() * 0.12);
+			}
+
+			int vehicleAge = insurancePolicyModel.getVehicleAge();
+			if (vehicleAge >= 20) {
+				finalPrice -= ((0.01 * ((vehicleAge % 10) + (vehicleAge / 10))) * insurancePolicyModel.getPrice());
+			}
+
+			finalPrice += insurancePolicyModel.getPrice();
+			return finalPrice;
+		}
+
+		return -1;
 	}
 }

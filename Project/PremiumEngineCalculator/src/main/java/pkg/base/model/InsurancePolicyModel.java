@@ -12,4 +12,12 @@ public class InsurancePolicyModel {
 	private int periodOfCoverage;
 	private double premiumAmount;
 	private double price;
+	private String vehicleType;
+	private double vehiclePrice;
+	private int vehicleAge;
+	private String personStage;
+	private String personSmokes;
+	private String personDrinks;
+	private String personHasSeriousDisease;
+	private double finalPrice;
 }

@@ -1,3 +1,4 @@
+<%@page import="java.util.ArrayList"%>
 <%@page import="pkg.base.entity.InsurancePolicy"%>
 <%@page import="java.util.List"%>
 <%@page import="org.apache.catalina.tribes.ChannelSender"%>
@@ -32,7 +33,7 @@ a {
 	padding-bottom: 12px;
 	text-align: center;
 	background-color: ${headingColor};
-	color:white;
+    color:white;
 }
 
 #tableStyle tr:nth-child(odd) {
@@ -42,8 +43,6 @@ a {
 #tableStyle tr:nth-child(even) {
 	background-color: #E2F07D;
 }
-
-
 </style>
 </head>
 <body style="background-color: #C7CFC9">
@@ -152,9 +151,8 @@ a {
 					<td><%=policy.getPrice()%></td>
 					<td><a
 						href="<%=adminBaseURL%>/updatePolicy/<%=policy.getPolicyId()%>"><input
-							type="button" value="Update" style="color: ${headingColor}"></a>				
-						<a
-						href="<%=adminBaseURL%>/deletePolicy/<%=policy.getPolicyId()%>"><input
+							type="button" value="Update" style="color: ${headingColor}"></a>
+						<a href="<%=adminBaseURL%>/deletePolicy/<%=policy.getPolicyId()%>"><input
 							type="button" value="Delete" style="color: ${headingColor}"></a></td>
 				</tr>
 				<%
@@ -181,6 +179,7 @@ a {
 					<th>Period of Coverage</th>
 					<th>Premium Amount</th>
 					<th>Price</th>
+					<th>Calculator</th>
 				</tr>
 
 				<%
@@ -193,6 +192,9 @@ a {
 					<td><%=policy.getPeriodOfCoverage()%></td>
 					<td><%=policy.getPremiumAmount()%></td>
 					<td><%=policy.getPrice()%></td>
+					<td><a
+						href="<%=customerBaseURL%>/calculatePremium/<%=policy.getPolicyId()%>"><input
+							type="button" value="Calculate" style="color: ${headingColor}"></a></td>
 				</tr>
 				<%
 				}
@@ -281,7 +283,7 @@ a {
 						<td align="left"><label id="premiumAmount"><strong
 								style="font-size: 30px">Enter premium amount:</strong></label></td>
 						<td align="left"><form:input type="number" min="100000"
-								max="1000000" path="premiumAmount" required="required" /></td>
+								max="10000000" path="premiumAmount" required="required" /></td>
 					</tr>
 					<tr>
 						<td align="left"><label id="price"><strong
@@ -296,14 +298,140 @@ a {
 				<form:button
 					style="color: #06F7E9; background-color: black; height: 30px; width:60px"><%=submitButtonName%></form:button>
 			</div>
-			<br>
 		</form:form>
-		<div style="text-align: center">
-			<strong style="color: ${messageColor}; font-size: 30px">${message}</strong>
+		<br>
+		<%
+		} else if (session.getAttribute("dashboardRequest") != null && session.getAttribute("adminDashboardView") != null
+				&& session.getAttribute("customerDashboardView") != null
+				&& session.getAttribute("dashboardRequest").equals("customer")
+				&& session.getAttribute("customerDashboardView").equals("calculatePremium")) {
+		%>
+		<div>
+			<form:form action="calculateOrSaveCalculation" method="post"
+				modelAttribute="policy">
+				<table
+					style="margin-left: auto; margin-right: auto; border: 5px solid black;">
+					<tr>
+						<td align="left"><strong style="font-size: 20px; color: red">Policy
+								Id:</strong></td>
+						<td align="right"><form:input path="policyId"
+								style="color : red" readonly="true"></form:input></td>
+					</tr>
+					<tr>
+						<td align="left"><strong style="font-size: 20px; color: red">Policy
+								Name:</strong></td>
+						<td align="right"><form:input path="policyName"
+								style="color : red" readonly="true"></form:input></td>
+					</tr>
+					<tr>
+						<td align="left"><strong style="font-size: 20px; color: red">Policy
+								Type:</strong></td>
+						<td align="right"><form:input path="policyType"
+								style="color : red" readonly="true" /></td>
+					</tr>
+					<tr>
+						<td align="left"><strong style="font-size: 20px; color: red">Period
+								of Coverage:</strong></td>
+						<td align="right"><form:input path="periodOfCoverage"
+								style="color : red" readonly="true" /></td>
+					</tr>
+					<tr>
+						<td align="left"><strong style="font-size: 20px; color: red">Premium
+								Amount:</strong></td>
+						<td align="right"><form:input path="premiumAmount"
+								style="color : red" readonly="true" /></td>
+					</tr>
+					<tr>
+						<td align="left"><strong style="font-size: 20px; color: red">Price
+								INR:</strong></td>
+						<td align="right"><form:input path="price"
+								style="color : red" readonly="true" /></td>
+					</tr>
+					<%
+					if (session.getAttribute("policyType").equals("Life Insurance")
+							|| session.getAttribute("policyType").equals("Medical Insurance")) {
+					%>
+					<tr>
+						<td align="left"><strong
+							style="font-size: 20px; color: black;">Enter your stage:</strong></td>
+						<td align="right"><form:select path="personStage"
+								required="required">
+								<form:option value="" label="Select here" hidden="hidden" />
+								<form:option value="Young" label="Young(18-39 years of age)" />
+								<form:option value="Middle Aged"
+									label="Middle Aged(40-59 years of age)" />
+								<form:option value="Old" label="Old(60 years of age and above)" />
+							</form:select></td>
+					</tr>
+					<tr>
+						<td align="left"><strong
+							style="font-size: 20px; color: black">Do you smoke?:</strong></td>
+						<td align="right"><form:radiobuttons path="personSmokes"
+								items="${choice}" required="required" /></td>
+					</tr>
+					<tr>
+						<td align="left"><strong
+							style="font-size: 20px; color: black;">Do you drink?:</strong></td>
+						<td align="right"><form:radiobuttons path="personDrinks"
+								items="${choice}" required="required" /></td>
+					</tr>
+					<tr>
+						<td align="left"><strong
+							style="font-size: 20px; color: black;">Do you have any
+								serious/chronic disease?: </strong></td>
+						<td align="right"><form:radiobuttons
+								path="personHasSeriousDisease" items="${choice}"
+								required="required" /></td>
+					</tr>
+					<%
+					} else if (session.getAttribute("policyType").equals("Vehicle Insurance")) {
+					%>
+					<tr>
+						<td align="left"><strong
+							style="font-size: 20px; color: black;">Enter the type of
+								your vehicle: </strong></td>
+						<td align="right"><form:radiobuttons path="vehicleType"
+								items="${choice}" required="required" /></td>
+					</tr>
+					<tr>
+						<td align="left"><strong
+							style="font-size: 20px; color: black;">Enter the price
+								of your vehicle: </strong></td>
+						<td align="right"><form:input type="number" min="65000"
+								max="10000000" path="vehiclePrice" required="required" /></td>
+					</tr>
+					<tr>
+						<td align="left"><strong
+							style="font-size: 20px; color: black;">Enter the age of
+								your vehicle: </strong></td>
+						<td align="right"><form:input type="number" min="0" max="35"
+								path="vehicleAge" required="required" /></td>
+					</tr>
+					<%
+					}
+					%>
+					<tr>
+						<td align="left"><strong
+							style="font-size: 20px; color: green;">Final Price INR:
+						</strong></td>
+						<td align="right"><form:input type="number" path="finalPrice"
+								readonly="true" style="color: green" /></td>
+					</tr>
+					<tr>
+						<td align="left"><form:button name="calculate"
+								style="color: #06F7E9; background-color: black; height: 30px; width: 355px">Calculate</form:button></td>
+						<td align="right"><form:button name="saveCalculation"
+								style="color: #06F7E9; background-color: black; height: 30px; width: 355px">Save Calculation</form:button></td>
+					</tr>
+				</table>
+			</form:form>
 		</div>
 		<%
 		}
 		%>
+		<div style="text-align: center">
+			<strong style="color: ${messageColor}; font-size: 30px">${message}</strong>
+		</div>
 	</section>
 
 </body>

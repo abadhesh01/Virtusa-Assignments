@@ -1,6 +1,7 @@
 package pkg.base.controller;
 
 import java.io.UnsupportedEncodingException;
+import java.util.Arrays;
 import java.util.Base64;
 import java.util.Date;
 import java.util.UUID;
@@ -21,7 +22,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
-
 import pkg.base.entity.InsurancePolicy;
 import pkg.base.model.InsurancePolicyModel;
 import pkg.base.model.Login;
@@ -489,6 +489,77 @@ public class HomeController {
 		session.setAttribute("dashboardRequest", "admin");
 		session.setAttribute("adminDashboardView", "default");
 		session.setAttribute("insurancePolicies", homeService.getAllInsurancePolicies());
+		return "dashboard";
+	}
+
+	// Launch Premium Engine Calculator Engine.
+	@GetMapping("/customer/calculatePremium/{policyId}")
+	public String premiumCalculator(@PathVariable("policyId") UUID policyId,
+			@ModelAttribute("policy") InsurancePolicyModel insurancePolicyModel, @ModelAttribute("login") Login login,
+			Model model, HttpSession session) {
+
+		logger.trace("\n\n\n\nSession Id[" + new Throwable().getStackTrace()[0].getMethodName() + "]: "
+				+ session.getId() + "\nSession Creation Time: " + session.getCreationTime() + "\n\n\n");
+
+		if (session.getAttribute("loggedCustomer") == null) {
+			customerLoginModel(model);
+			return "login";
+		}
+
+		return calculatorModelConfig(policyId, insurancePolicyModel, model, session);
+	}
+
+	// Calculate premium for different scenario.
+	@PostMapping(path = "/customer/calculatePremium/calculateOrSaveCalculation", params = {"calculate"})
+	public String calculatePremium(@ModelAttribute("policy") InsurancePolicyModel insurancePolicyModel,
+			@ModelAttribute("login") Login login, Model model, HttpSession session) {
+
+		logger.trace("\n\n\n\nSession Id[" + new Throwable().getStackTrace()[0].getMethodName() + "]: "
+				+ session.getId() + "\nSession Creation Time: " + session.getCreationTime() + "\n\n\n");
+
+		if (session.getAttribute("loggedCustomer") == null) {
+			customerLoginModel(model);
+			return "login";
+		}
+
+		insurancePolicyModel.setFinalPrice(homeService.calculatePremiumCost(insurancePolicyModel));
+
+		return calculatorModelConfig(insurancePolicyModel.getPolicyId(), insurancePolicyModel, model, session);
+	}
+
+	public String calculatorModelConfig(UUID policyId, InsurancePolicyModel insurancePolicyModel, Model model,
+			HttpSession session) {
+		customerDashboardModel(model, ((Login) (session.getAttribute("loggedCustomer"))).getUsername());
+
+		InsurancePolicy insurancePolicy = homeService.getInsurancePolicyById(policyId);
+		if (insurancePolicy == null) {
+			session.setAttribute("dashboardRequest", "customer");
+			session.setAttribute("customerDashboardView", "default");
+			session.setAttribute("insurancePolicies", homeService.getAllInsurancePolicies());
+			model.addAttribute("dashboardMessageBar", "Policy with id=\"" + policyId + "\" was not found!"
+					+ "<br>The policy might have been removed by admin or does not exist.");
+			model.addAttribute("dashboardMessageBarColor", "red");
+			return "dashboard";
+		}
+
+		insurancePolicyModel.setPolicyId(insurancePolicy.getPolicyId());
+		insurancePolicyModel.setPolicyName(insurancePolicy.getPolicyName());
+		insurancePolicyModel.setPolicyType(insurancePolicy.getPolicyType());
+		insurancePolicyModel.setPeriodOfCoverage(insurancePolicy.getPeriodOfCoverage());
+		insurancePolicyModel.setPremiumAmount(insurancePolicy.getPremiumAmount());
+		insurancePolicyModel.setPrice(insurancePolicy.getPrice());
+
+		session.setAttribute("dashboardRequest", "customer");
+		session.setAttribute("customerDashboardView", "calculatePremium");
+		session.setAttribute("policyType", insurancePolicy.getPolicyType());
+		if (insurancePolicy.getPolicyType().equals("Life Insurance")
+				|| insurancePolicy.getPolicyType().equals("Medical Insurance")) {
+			model.addAttribute("choice", Arrays.asList("Yes", "No"));
+		} else if (insurancePolicy.getPolicyType().equals("Vehicle Insurance")) {
+			model.addAttribute("choice", Arrays.asList("Two Wheeler", "Three Wheeler", "Four Wheeler"));
+		}
+		model.addAttribute("message", "");
+		model.addAttribute("messageColor", "#0B8DDD");
 		return "dashboard";
 	}
 
