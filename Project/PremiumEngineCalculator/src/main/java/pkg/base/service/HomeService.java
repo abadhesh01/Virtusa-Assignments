@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import pkg.base.dao.DAO;
 import pkg.base.entity.Admin;
+import pkg.base.entity.Calculation;
 import pkg.base.entity.Customer;
 import pkg.base.entity.InsurancePolicy;
 import pkg.base.model.InsurancePolicyModel;
@@ -21,10 +22,6 @@ public class HomeService {
 
 	@Autowired
 	private DAO dao;
-
-	public String sampleServiceRequest() {
-		return dao.getHibernateTemplate().toString();
-	}
 
 	// Validating and creating new customer account.
 	public String validateCustomerSignup(Signup signup) throws UnsupportedEncodingException {
@@ -112,6 +109,7 @@ public class HomeService {
 
 	// Deleting an existing insurance policy.
 	public String[] deleteInsurancePolicyById(UUID policyId) {
+
 		String result[] = new String[2];
 		if (dao.deletePolicyById(policyId) == true) {
 			result[0] = "#0B8DDD";
@@ -198,5 +196,41 @@ public class HomeService {
 		}
 
 		return -1;
+	}
+
+	// Update customer's calculation(s).
+	public void saveCalculation(String username, Calculation calculation) {
+		Customer customer = dao.getCustomerByUsername(username);
+		customer.addNewCalculation(calculation);
+		calculation.setCustomer(customer);
+		dao.updateCustomersData(customer);
+	}
+
+	// Get all calculations by username.
+	public List<Calculation> getAllCalculationsByUsername(String username) {
+		return dao.getCustomerByUsername(username).getCalculations();
+	}
+
+	// Delete all calculations of a customer.
+	public void deleteAllCalculationsByUserName(String username) {
+		Customer customer = dao.getCustomerByUsername(username);
+		List<Calculation> calculations = customer.getCalculations();
+		for (Calculation calculation : calculations) {
+			calculation.setCustomer(null);
+		}
+		dao.deleteAllCalculations(calculations);
+	}
+
+	// Delete calculation by id.
+	public boolean deleteCalculationById(UUID calculationId) {
+		Calculation calculation = dao.getCalculationById(calculationId);
+		if (calculation == null) {
+			return false;
+		}
+
+		calculation.getCustomer().getCalculations().remove(calculation);
+		calculation.setCustomer(null);
+		dao.deleteCalculation(calculation);
+		return true;
 	}
 }

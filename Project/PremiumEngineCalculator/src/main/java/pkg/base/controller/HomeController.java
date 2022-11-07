@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import pkg.base.entity.Calculation;
 import pkg.base.entity.InsurancePolicy;
 import pkg.base.model.InsurancePolicyModel;
 import pkg.base.model.Login;
@@ -37,12 +37,6 @@ public class HomeController {
 	private Logger logger;
 	private String customerBaseURL = "http://localhost:9090/PremiumEngineCalculator/home/customer/";
 	private String adminBaseURL = "http://localhost:9090/PremiumEngineCalculator/home/admin/";
-
-	@GetMapping(path = "/sample")
-	@ResponseBody
-	public String sampleRequest() {
-		return "<strong>Execution successful! :)<br>[" + homeService.sampleServiceRequest() + "]</strong>";
-	}
 
 	// Customer Login.
 	@GetMapping(path = "/customer/login")
@@ -351,7 +345,7 @@ public class HomeController {
 		return "dashboard";
 	}
 
-	// Deleting an insurance policy
+	// Deleting an insurance policy.
 	@GetMapping("/admin/deletePolicy/{policyId}")
 	public String deletePolicy(@PathVariable("policyId") UUID policyId,
 			@ModelAttribute("policy") InsurancePolicyModel insurancePolicyModel, @ModelAttribute("login") Login login,
@@ -509,8 +503,8 @@ public class HomeController {
 		return calculatorModelConfig(policyId, insurancePolicyModel, model, session);
 	}
 
-	// Calculate premium for different scenario.
-	@PostMapping(path = "/customer/calculatePremium/calculateOrSaveCalculation", params = {"calculate"})
+	// Calculate premium cost for different scenario.
+	@PostMapping(path = "/customer/calculatePremium/calculateOrSaveCalculation", params = { "calculate" })
 	public String calculatePremium(@ModelAttribute("policy") InsurancePolicyModel insurancePolicyModel,
 			@ModelAttribute("login") Login login, Model model, HttpSession session) {
 
@@ -527,6 +521,111 @@ public class HomeController {
 		return calculatorModelConfig(insurancePolicyModel.getPolicyId(), insurancePolicyModel, model, session);
 	}
 
+	// Save calculation to customer's account.
+	@PostMapping(path = "/customer/calculatePremium/calculateOrSaveCalculation", params = { "save" })
+	public String saveCalculation(@ModelAttribute("policy") InsurancePolicyModel insurancePolicyModel,
+			@ModelAttribute("login") Login login, Model model, HttpSession session) {
+
+		logger.trace("\n\n\n\nSession Id[" + new Throwable().getStackTrace()[0].getMethodName() + "]: "
+				+ session.getId() + "\nSession Creation Time: " + session.getCreationTime() + "\n\n\n");
+
+		if (session.getAttribute("loggedCustomer") == null) {
+			customerLoginModel(model);
+			return "login";
+		}
+
+		String dashboard = calculatorModelConfig(insurancePolicyModel.getPolicyId(), insurancePolicyModel, model,
+				session);
+		if (session.getAttribute("calculationStatus").equals("false")) {
+			return dashboard;
+		}
+
+		if (insurancePolicyModel.getFinalPrice() != homeService.calculatePremiumCost(insurancePolicyModel)) {
+			model.addAttribute("messageColor", "red");
+			model.addAttribute("message", "Please calculate the final cost to save the data to your account!");
+			return dashboard;
+		}
+
+		homeService.saveCalculation(((Login) session.getAttribute("loggedCustomer")).getUsername(),
+				new Calculation(insurancePolicyModel));
+		model.addAttribute("messageColor", "#0B8DDD");
+		model.addAttribute("message", "Your calculaion has been saved successfully.");
+		return dashboard;
+	}
+
+	// Show all calculations of logged in customer.
+	@GetMapping("/customer/showAllCalculations")
+	public String showAllCalculations(@ModelAttribute("policy") InsurancePolicyModel insurancePolicyModel,
+			@ModelAttribute("login") Login login, Model model, HttpSession session) {
+
+		logger.trace("\n\n\n\nSession Id[" + new Throwable().getStackTrace()[0].getMethodName() + "]: "
+				+ session.getId() + "\nSession Creation Time: " + session.getCreationTime() + "\n\n\n");
+
+		if (session.getAttribute("loggedCustomer") == null) {
+			customerLoginModel(model);
+			return "login";
+		}
+
+		return calculationListConfig(model, session);
+	}
+
+	// Delete a customer's calculation by it's id.
+	@GetMapping("/customer/deleteCalculation/{calculationId}")
+	public String deleteCalculation(@PathVariable("calculationId") UUID calculationId,
+			@ModelAttribute("policy") InsurancePolicyModel insurancePolicyModel, @ModelAttribute("login") Login login,
+			Model model, HttpSession session) {
+
+		logger.trace("\n\n\n\nSession Id[" + new Throwable().getStackTrace()[0].getMethodName() + "]: "
+				+ session.getId() + "\nSession Creation Time: " + session.getCreationTime() + "\n\n\n");
+
+		if (session.getAttribute("loggedCustomer") == null) {
+			customerLoginModel(model);
+			return "login";
+		}
+
+		boolean result = homeService.deleteCalculationById(calculationId);
+		String dashboard = null;
+
+		if (result) {
+			dashboard = calculationListConfig(model, session);
+			model.addAttribute("dashboardMessageBar",
+					"Calculation with id=\"" + calculationId + "\" has been removed from your account successfully.");
+			model.addAttribute("dashboardMessageBarColor", "#0B8DDD");
+			return dashboard;
+		}
+
+		dashboard = calculationListConfig(model, session);
+		model.addAttribute("dashboardMessageBar", "Calculation with id=\"" + calculationId + "\" was not found!");
+		model.addAttribute("dashboardMessageBarColor", "red");
+		return dashboard;
+	}
+
+	// Show all calculations of logged in customer.
+	@GetMapping("/customer/deleteAllCalculations")
+	public String deleteAllCalculations(@ModelAttribute("policy") InsurancePolicyModel insurancePolicyModel,
+			@ModelAttribute("login") Login login, Model model, HttpSession session) {
+
+		logger.trace("\n\n\n\nSession Id[" + new Throwable().getStackTrace()[0].getMethodName() + "]: "
+				+ session.getId() + "\nSession Creation Time: " + session.getCreationTime() + "\n\n\n");
+
+		if (session.getAttribute("loggedCustomer") == null) {
+			customerLoginModel(model);
+			return "login";
+		}
+
+		homeService.deleteAllCalculationsByUserName(((Login) session.getAttribute("loggedCustomer")).getUsername());
+		return calculationListConfig(model, session);
+	}
+
+	public String calculationListConfig(Model model, HttpSession session) {
+		session.setAttribute("dashboardRequest", "customer");
+		session.setAttribute("customerDashboardView", "showAllCalculations");
+		session.setAttribute("calculations", homeService
+				.getAllCalculationsByUsername(((Login) session.getAttribute("loggedCustomer")).getUsername()));
+		customerDashboardModel(model, ((Login) session.getAttribute("loggedCustomer")).getUsername());
+		return "dashboard";
+	}
+
 	public String calculatorModelConfig(UUID policyId, InsurancePolicyModel insurancePolicyModel, Model model,
 			HttpSession session) {
 		customerDashboardModel(model, ((Login) (session.getAttribute("loggedCustomer"))).getUsername());
@@ -535,6 +634,7 @@ public class HomeController {
 		if (insurancePolicy == null) {
 			session.setAttribute("dashboardRequest", "customer");
 			session.setAttribute("customerDashboardView", "default");
+			session.setAttribute("calculationStatus", "false");
 			session.setAttribute("insurancePolicies", homeService.getAllInsurancePolicies());
 			model.addAttribute("dashboardMessageBar", "Policy with id=\"" + policyId + "\" was not found!"
 					+ "<br>The policy might have been removed by admin or does not exist.");
@@ -552,6 +652,7 @@ public class HomeController {
 		session.setAttribute("dashboardRequest", "customer");
 		session.setAttribute("customerDashboardView", "calculatePremium");
 		session.setAttribute("policyType", insurancePolicy.getPolicyType());
+		session.setAttribute("calculationStatus", "true");
 		if (insurancePolicy.getPolicyType().equals("Life Insurance")
 				|| insurancePolicy.getPolicyType().equals("Medical Insurance")) {
 			model.addAttribute("choice", Arrays.asList("Yes", "No"));

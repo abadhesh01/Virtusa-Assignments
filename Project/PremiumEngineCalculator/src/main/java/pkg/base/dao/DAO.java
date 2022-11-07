@@ -6,6 +6,7 @@ import java.util.UUID;
 import org.springframework.orm.hibernate5.HibernateTemplate;
 
 import pkg.base.entity.Admin;
+import pkg.base.entity.Calculation;
 import pkg.base.entity.Customer;
 import pkg.base.entity.InsurancePolicy;
 
@@ -22,6 +23,9 @@ public interface DAO {
 
 	// Creating new "Customer" account.
 	String createNewCustomerAccount(Customer newCustomer);
+
+	// Update customer's data.
+	void updateCustomersData(Customer customer);
 
 	// Finding a "Customer" by "username".
 	Customer getCustomerByUsername(String username);
@@ -46,4 +50,13 @@ public interface DAO {
 
 	// Get all policies.
 	List<InsurancePolicy> getAllInsurancePolicies();
+
+	// Get calculation by id.
+	Calculation getCalculationById(UUID calculationId);
+
+	// Delete calculation.
+	public void deleteCalculation(Calculation calculation);
+
+	// Delete all calculations of provided list.
+	void deleteAllCalculations(List<Calculation> calculations);
 }

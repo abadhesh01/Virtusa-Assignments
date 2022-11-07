@@ -15,6 +15,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import pkg.base.entity.Admin;
+import pkg.base.entity.Calculation;
 import pkg.base.entity.Customer;
 import pkg.base.entity.InsurancePolicy;
 
@@ -29,34 +30,47 @@ public class DAOImpl implements DAO {
 
 	// Creating new "Customer" account.
 	@Transactional
+	@Override
 	public String createNewCustomerAccount(Customer newCustomer) {
 		return hibernateTemplate.save(newCustomer).toString();
 	}
 
+	// Update customer's data.
+	@Transactional
+	@Override
+	public void updateCustomersData(Customer customer) {
+		hibernateTemplate.saveOrUpdate(customer);
+	}
+
 	// Finding a "Customer" by "username".
+	@Override
 	public Customer getCustomerByUsername(String username) {
 		return hibernateTemplate.get(Customer.class, username);
 	}
 
 	// Creating new "Admin" account.
 	@Transactional
+	@Override
 	public String createNewAdminAccount(Admin newAdmin) {
 		return hibernateTemplate.save(newAdmin).toString();
 	}
 
 	// Finding a "Admin" by "username".
+	@Override
 	public Admin getAdminByUsername(String username) {
 		return hibernateTemplate.get(Admin.class, username);
 	}
 
 	// Add or update a policy.
 	@Transactional
+	@Override
 	public void addOrUpdateInsurancePolicy(InsurancePolicy insurancePolicy) {
 		hibernateTemplate.saveOrUpdate(insurancePolicy);
 	}
 
 	// Delete an existing policy.
 	@Transactional
+	@Override
 	public boolean deletePolicyById(UUID policyId) {
 		InsurancePolicy policy = hibernateTemplate.get(InsurancePolicy.class, policyId);
 		if (policy != null) {
@@ -67,12 +81,14 @@ public class DAOImpl implements DAO {
 	}
 
 	// Get policy by policy id.
+	@Override
 	public InsurancePolicy getInsurancePolicyById(UUID policyId) {
 		return hibernateTemplate.get(InsurancePolicy.class, policyId);
 	}
 
 	// Get policy by policy name.
 	@SuppressWarnings({ "unchecked", "deprecation" })
+	@Override
 	public List<InsurancePolicy> getInsurancePolicyByPolicyName(String policyName) {
 		Criteria criteria = hibernateTemplate.getSessionFactory().openSession().createCriteria(InsurancePolicy.class);
 		criteria.add(Restrictions.eq("policyName", policyName));
@@ -82,7 +98,29 @@ public class DAOImpl implements DAO {
 	}
 
 	// Get all policies.
+	@Override
 	public List<InsurancePolicy> getAllInsurancePolicies() {
 		return hibernateTemplate.loadAll(InsurancePolicy.class);
 	}
+
+	@Override
+	// Get calculation by id.
+	public Calculation getCalculationById(UUID calculationId) {
+		return hibernateTemplate.get(Calculation.class, calculationId);
+	}
+
+	@Transactional
+	@Override
+	// Delete calculation.
+	public void deleteCalculation(Calculation calculation) {
+		hibernateTemplate.delete(calculation);
+	}
+
+	// Delete all calculations of provided list.
+	@Transactional
+	@Override
+	public void deleteAllCalculations(List<Calculation> calculations) {
+		hibernateTemplate.deleteAll(calculations);
+	}
+
 }

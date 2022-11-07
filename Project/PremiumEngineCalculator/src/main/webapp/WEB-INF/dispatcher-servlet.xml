@@ -43,6 +43,7 @@
 				<value>pkg.base.entity.Customer</value>
 				<value>pkg.base.entity.Admin</value>
 				<value>pkg.base.entity.InsurancePolicy</value>
+				<value>pkg.base.entity.Calculation</value>
 			</list>
 		</property>
 	</bean>

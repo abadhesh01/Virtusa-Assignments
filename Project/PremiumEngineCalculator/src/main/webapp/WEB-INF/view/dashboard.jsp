@@ -1,3 +1,4 @@
+<%@page import="pkg.base.entity.Calculation"%>
 <%@page import="java.util.ArrayList"%>
 <%@page import="pkg.base.entity.InsurancePolicy"%>
 <%@page import="java.util.List"%>
@@ -41,6 +42,34 @@ a {
 }
 
 #tableStyle tr:nth-child(even) {
+	background-color: #E2F07D;
+}
+
+#tableStyle2 {
+	font-family: sans-serif;
+	border-collapse: separate;
+	width: 100%
+}
+
+#tableStyle2 td, #tableStyle2 th {
+	border: 1px solid black;
+	text-align: left;
+	padding: 8px;
+}
+
+#tableStyle2 th {
+	padding-top: 12px;
+	padding-bottom: 12px;
+	text-align: center;
+	background-color: ${headingColor};
+    color:white;
+}
+
+#tableStyle2 tr:nth-child(odd) {
+	background-color: #7DC4F0;
+}
+
+#tableStyle2 tr:nth-child(even) {
 	background-color: #E2F07D;
 }
 </style>
@@ -103,6 +132,9 @@ a {
 					<li style="display: inline; float: center; padding: 8px;"><a
 						href="<%=customerBaseURL%>/showAllPolicies" style="color: white;"><strong>Show
 								all policies/Refresh</strong></a></li>
+					<li style="display: inline; float: center; padding: 8px;"><a
+						href="<%=customerBaseURL%>/showAllCalculations"
+						style="color: white;"><strong>Show all calculations</strong></a></li>
 					<%
 					}
 					%>
@@ -306,6 +338,10 @@ a {
 				&& session.getAttribute("dashboardRequest").equals("customer")
 				&& session.getAttribute("customerDashboardView").equals("calculatePremium")) {
 		%>
+		<div
+			style="color:${headingColor}; text-align: center; font-size: 30px">
+			<strong>Premium Calculator</strong>
+		</div>
 		<div>
 			<form:form action="calculateOrSaveCalculation" method="post"
 				modelAttribute="policy">
@@ -314,7 +350,7 @@ a {
 					<tr>
 						<td align="left"><strong style="font-size: 20px; color: red">Policy
 								Id:</strong></td>
-						<td align="right"><form:input path="policyId"
+						<td align="right"><form:input path="policyId" size="35px"
 								style="color : red" readonly="true"></form:input></td>
 					</tr>
 					<tr>
@@ -420,12 +456,152 @@ a {
 					<tr>
 						<td align="left"><form:button name="calculate"
 								style="color: #06F7E9; background-color: black; height: 30px; width: 355px">Calculate</form:button></td>
-						<td align="right"><form:button name="saveCalculation"
+						<td align="right"><form:button name="save"
 								style="color: #06F7E9; background-color: black; height: 30px; width: 355px">Save Calculation</form:button></td>
 					</tr>
 				</table>
 			</form:form>
 		</div>
+		<div align="center">
+			<br> <input type="button" value="Print" onclick="window.print()"
+				style="color: #06F7E9; background-color: black; height: 30px; width: 50px" />
+		</div>
+		<%
+		} else if (session.getAttribute("dashboardRequest") != null && session.getAttribute("adminDashboardView") != null
+				&& session.getAttribute("customerDashboardView") != null
+				&& session.getAttribute("dashboardRequest").equals("customer")
+				&& session.getAttribute("customerDashboardView").equals("showAllCalculations")) {
+
+		List<Calculation> calculations = (List<Calculation>) session.getAttribute("calculations");
+		%>
+		<%
+		if (calculations.isEmpty()) {
+		%>
+		<div align="center" style="font-size: 30px;">
+			<strong style="color: red"> Empty! :(<br> You have not
+				saved any calculations yet!
+			</strong>
+		</div>
+		<%
+		} else {
+		%>
+		<div style="text-align: center">
+			<strong style="font-size: 30px; color:${headingColor}">Your
+				Calculation(s) <br> <br>
+			</strong>
+		</div>
+		<div style="text-align: center">
+			<a href="<%=customerBaseURL%>/deleteAllCalculations"> <input
+				type="button" name="Delete All Calculations"
+				value="Delete All Calculations"
+				style="color: #06F7E9; background-color: black; height: 30px; width: 147px" />
+			</a> <br>
+			<br> <input type="button" name="Print" value="Print"
+				onclick="window.print()"
+				style="color: #06F7E9; background-color: black; height: 25px; width: 147px" />
+			<br>
+			<br>
+		</div>
+		<%
+		int serialNumber = 0;
+		for (Calculation calculation : calculations) {
+		%>
+
+		<div id="calculation<%=++serialNumber%>" style="text-align: left;">
+			<table id="tableStyle2">
+				<tr>
+					<td><strong>Serial Number</strong></td>
+					<td><%=serialNumber%></td>
+				</tr>
+				<tr>
+					<td><strong>Policy Id</strong></td>
+					<td><%=calculation.getPolicyId()%></td>
+				</tr>
+				<tr>
+					<td><strong>Policy Name</strong></td>
+					<td><%=calculation.getPolicyName()%></td>
+				</tr>
+				<tr>
+					<td><strong>Policy Type</strong></td>
+					<td><%=calculation.getPolicyType()%></td>
+				</tr>
+				<tr>
+					<td><strong>Period of Coverage</strong></td>
+					<td><%=calculation.getPeriodOfCoverage()%></td>
+				</tr>
+				<tr>
+					<td><strong>Premium Amount</strong></td>
+					<td><%=calculation.getPremiumAmount()%></td>
+				</tr>
+				<tr>
+					<td><strong style="color: #11908E;">Policy Price INR</strong></td>
+					<td><%=calculation.getPrice()%></td>
+				</tr>
+				<%
+				if (calculation.getPolicyType().equals("Life Insurance") || calculation.getPolicyType().equals("Medical Insurance")) {
+				%>
+				<tr>
+					<td><strong>Person Stage</strong></td>
+					<td><%=calculation.getPersonStage()%></td>
+				</tr>
+				<tr>
+					<td><strong>Does the person Smoke?</strong></td>
+					<td><%=calculation.getPersonSmokes()%></td>
+				</tr>
+				<tr>
+					<td><strong>Does the person Drink?</strong></td>
+					<td><%=calculation.getPersonDrinks()%></td>
+				</tr>
+				<tr>
+					<td><strong>Does the person has any serious disease?</strong></td>
+					<td><%=calculation.getPersonHasSeriousDisease()%></td>
+				</tr>
+				<%
+				}
+				%>
+				<%
+				if (calculation.getPolicyType().equals("Vehicle Insurance")) {
+				%>
+				<tr>
+					<td><strong>Vehicle Type</strong></td>
+					<td><%=calculation.getVehicleType()%></td>
+				</tr>
+				<tr>
+					<td><strong>Vehicle Price</strong></td>
+					<td><%=calculation.getVehiclePrice()%></td>
+				</tr>
+				<tr>
+					<td><strong>Vehicle Age</strong></td>
+					<td><%=calculation.getVehicleAge()%></td>
+				</tr>
+				<%
+				}
+				%>
+				<tr>
+					<td><strong style="color: #AB1494;">Final Price INR</strong></td>
+					<td><%=calculation.getFinalPrice()%></td>
+				</tr>
+				<tr>
+					<td><a
+						href="<%=customerBaseURL%>/deleteCalculation/<%=calculation.getCalculationId()%>">
+							<input type="button" name="Delete" value="Delete"
+							style="color: #06F7E9; background-color: black; height: 30px; width: 60px" />
+					</a></td>
+				</tr>
+			</table>
+		</div>
+		<%
+		for (int count = 1; count <= 5; count++) {
+		%>
+		<br>
+		<%
+		}
+		%>
+		<%
+		}
+		}
+		%>
+
 		<%
 		}
 		%>
