@@ -104,7 +104,7 @@ a {
 	</section>
 
 	<%
-	String customerBaseURL = "http://localhost:9090/PremiumEngineCalculator/home/customer";
+	String customerBaseURL = "/PremiumEngineCalculator/home/customer";
 	String adminBaseURL = "http://localhost:9090/PremiumEngineCalculator/home/admin";
 	%>
 

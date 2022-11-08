@@ -26,7 +26,7 @@
 	<section>
 		<div style="text-align: center;">
 			<strong style="font-size: 20px; color: #9E0DCC"> <a
-				href="http://localhost:9090/PremiumEngineCalculator/home/customer/login">Return
+				href="/PremiumEngineCalculator/home/customer/login">Return
 					to customer home</a> <br> <br> <a
 				href="http://localhost:9090/PremiumEngineCalculator/home/admin/login">Return
 					to admin home</a>

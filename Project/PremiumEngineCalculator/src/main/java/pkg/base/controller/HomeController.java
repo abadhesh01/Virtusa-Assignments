@@ -36,7 +36,7 @@ public class HomeController {
 	@Autowired
 	private HomeService homeService;
 	private Logger logger;
-	private String customerBaseURL = "http://localhost:9090/PremiumEngineCalculator/home/customer/";
+	private String customerBaseURL = "/PremiumEngineCalculator/home/customer/";
 	private String adminBaseURL = "http://localhost:9090/PremiumEngineCalculator/home/admin/";
 
 	// Customer Login.
