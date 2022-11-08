@@ -1,5 +1,6 @@
 package pkg.base.entity;
 
+import java.io.Serializable;
 import java.util.UUID;
 
 import javax.persistence.Entity;
@@ -19,7 +20,11 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class InsurancePolicy {
+public class InsurancePolicy implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 5544087208731277026L;
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private UUID policyId;

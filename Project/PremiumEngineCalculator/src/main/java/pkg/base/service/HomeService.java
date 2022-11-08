@@ -1,6 +1,6 @@
 package pkg.base.service;
 
-import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.List;
 import java.util.UUID;
@@ -24,14 +24,15 @@ public class HomeService {
 	private DAO dao;
 
 	// Validating and creating new customer account.
-	public String validateCustomerSignup(Signup signup) throws UnsupportedEncodingException {
+	public String validateCustomerSignup(Signup signup) {
 
 		if (dao.getCustomerByUsername(signup.getUsername()) != null
 				|| dao.getAdminByUsername(signup.getUsername()) != null) {
 			return "Username already exists!";
 		}
 
-		signup.setConfirmPassword(Base64.getEncoder().encodeToString(signup.getConfirmPassword().getBytes("UTF-8")));
+		signup.setConfirmPassword(
+				Base64.getEncoder().encodeToString(signup.getConfirmPassword().getBytes(StandardCharsets.UTF_8)));
 		signup.setNewPassword(signup.getConfirmPassword());
 
 		return dao.createNewCustomerAccount(
@@ -39,14 +40,15 @@ public class HomeService {
 	}
 
 	// Validating and creating new admin account.
-	public String validateAdminSignup(Signup signup) throws UnsupportedEncodingException {
+	public String validateAdminSignup(Signup signup) {
 
 		if (dao.getAdminByUsername(signup.getUsername()) != null
 				|| dao.getCustomerByUsername(signup.getUsername()) != null) {
 			return "Username already exists!";
 		}
 
-		signup.setConfirmPassword(Base64.getEncoder().encodeToString(signup.getConfirmPassword().getBytes("UTF-8")));
+		signup.setConfirmPassword(
+				Base64.getEncoder().encodeToString(signup.getConfirmPassword().getBytes(StandardCharsets.UTF_8)));
 		signup.setNewPassword(signup.getConfirmPassword());
 
 		return dao.createNewAdminAccount(
@@ -54,7 +56,7 @@ public class HomeService {
 	}
 
 	// Validating customer login.
-	public String validateCustomerLogin(Login login) throws UnsupportedEncodingException {
+	public String validateCustomerLogin(Login login) {
 
 		Customer customer = dao.getCustomerByUsername(login.getUsername());
 
@@ -62,7 +64,7 @@ public class HomeService {
 			return "Username does not exist!";
 		}
 
-		login.setPassword(Base64.getEncoder().encodeToString(login.getPassword().getBytes("UTF-8")));
+		login.setPassword(Base64.getEncoder().encodeToString(login.getPassword().getBytes(StandardCharsets.UTF_8)));
 
 		if (!customer.getPassword().equals(login.getPassword())) {
 			return "Invalid password!";
@@ -72,7 +74,7 @@ public class HomeService {
 	}
 
 	// Validating admin login.
-	public String validateAdminLogin(Login login) throws UnsupportedEncodingException {
+	public String validateAdminLogin(Login login) {
 
 		Admin admin = dao.getAdminByUsername(login.getUsername());
 
@@ -80,7 +82,7 @@ public class HomeService {
 			return "Username does not exist!";
 		}
 
-		login.setPassword(Base64.getEncoder().encodeToString(login.getPassword().getBytes("UTF-8")));
+		login.setPassword(Base64.getEncoder().encodeToString(login.getPassword().getBytes(StandardCharsets.UTF_8)));
 
 		if (!admin.getPassword().equals(login.getPassword())) {
 			return "Invalid password!";
@@ -110,8 +112,8 @@ public class HomeService {
 	// Deleting an existing insurance policy.
 	public String[] deleteInsurancePolicyById(UUID policyId) {
 
-		String result[] = new String[2];
-		if (dao.deletePolicyById(policyId) == true) {
+		String[] result = new String[2];
+		if (dao.deletePolicyById(policyId)) {
 			result[0] = "#0B8DDD";
 			result[1] = "The policy with id=\"" + policyId + "\" has been deleted successfully.";
 			return result;
@@ -138,34 +140,39 @@ public class HomeService {
 
 		double finalPrice = 0.0;
 		String policyType = insurancePolicyModel.getPolicyType();
+		String personStage = insurancePolicyModel.getPersonStage();
+		boolean lifeInsurance = policyType.equals("Life Insurance");
+		boolean medicalInsurance = policyType.equals("Medical Insurance");
+		boolean vehicleInsurance = policyType.equals("Vehicle Insurance");
+		double smokerAdditionalCharges = 0.0;
+		double drinkerAdditionalCharges = 0.0;
+		double seriousDiseaseAdditionalCharges = 0.0;
 
-		if (policyType.equals("Life Insurance") || policyType.equals("Medical Insurance")) {
+		if (lifeInsurance) {
+			smokerAdditionalCharges = 0.10;
+			drinkerAdditionalCharges = 0.20;
+			seriousDiseaseAdditionalCharges = 0.30;
+		}
+
+		if (medicalInsurance) {
+			smokerAdditionalCharges = 0.05;
+			drinkerAdditionalCharges = 0.10;
+			seriousDiseaseAdditionalCharges = 0.15;
+		}
+
+		if (!vehicleInsurance) {
 
 			if (insurancePolicyModel.getPersonSmokes().equals("Yes")) {
-				if (policyType.equals("Life Insurance")) {
-					finalPrice += (insurancePolicyModel.getPrice() * 0.10);
-				} else if (policyType.equals("Medical Insurance")) {
-					finalPrice += (insurancePolicyModel.getPrice() * 0.05);
-				}
+				finalPrice += (insurancePolicyModel.getPrice() * smokerAdditionalCharges);
 			}
 
 			if (insurancePolicyModel.getPersonDrinks().equals("Yes")) {
-				if (policyType.equals("Life Insurance")) {
-					finalPrice += (insurancePolicyModel.getPrice() * 0.20);
-				} else if (policyType.equals("Medical Insurance")) {
-					finalPrice += (insurancePolicyModel.getPrice() * 0.10);
-				}
+				finalPrice += (insurancePolicyModel.getPrice() * drinkerAdditionalCharges);
 			}
 
 			if (insurancePolicyModel.getPersonHasSeriousDisease().equals("Yes")) {
-				if (policyType.equals("Life Insurance")) {
-					finalPrice += (insurancePolicyModel.getPrice() * 0.30);
-				} else if (policyType.equals("Medical Insurance")) {
-					finalPrice += (insurancePolicyModel.getPrice() * 0.15);
-				}
+				finalPrice += (insurancePolicyModel.getPrice() * seriousDiseaseAdditionalCharges);
 			}
-
-			String personStage = insurancePolicyModel.getPersonStage();
 
 			if (personStage.equals("Young")) {
 				finalPrice -= (insurancePolicyModel.getPrice() * 0.15);
@@ -177,8 +184,7 @@ public class HomeService {
 			return finalPrice;
 		}
 
-		else if (policyType.equals("Vehicle Insurance")) {
-
+		if (vehicleInsurance) {
 			String vehicleType = insurancePolicyModel.getVehicleType();
 			if (vehicleType.equals("Two Wheeler")) {
 				finalPrice -= (insurancePolicyModel.getPrice() * 0.07);
@@ -188,7 +194,8 @@ public class HomeService {
 
 			int vehicleAge = insurancePolicyModel.getVehicleAge();
 			if (vehicleAge >= 20) {
-				finalPrice -= ((0.01 * ((vehicleAge % 10) + (vehicleAge / 10))) * insurancePolicyModel.getPrice());
+				finalPrice -= ((0.01 * ((vehicleAge % 10) + ((double) vehicleAge / 10)))
+						* insurancePolicyModel.getPrice());
 			}
 
 			finalPrice += insurancePolicyModel.getPrice();
@@ -204,6 +211,11 @@ public class HomeService {
 		customer.addNewCalculation(calculation);
 		calculation.setCustomer(customer);
 		dao.updateCustomersData(customer);
+	}
+
+	// Get calculation by id.
+	public Calculation getCalculationById(UUID calculationId) {
+		return dao.getCalculationById(calculationId);
 	}
 
 	// Get all calculations by username.

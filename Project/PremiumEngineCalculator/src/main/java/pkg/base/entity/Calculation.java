@@ -1,5 +1,6 @@
 package pkg.base.entity;
 
+import java.io.Serializable;
 import java.util.UUID;
 
 import javax.persistence.CascadeType;
@@ -23,7 +24,11 @@ import pkg.base.model.InsurancePolicyModel;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Calculation {
+public class Calculation implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -1621658325747993964L;
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private UUID calculationId;

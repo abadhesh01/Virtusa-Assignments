@@ -495,12 +495,10 @@ a {
 				type="button" name="Delete All Calculations"
 				value="Delete All Calculations"
 				style="color: #06F7E9; background-color: black; height: 30px; width: 147px" />
-			</a> <br>
-			<br> <input type="button" name="Print" value="Print"
+			</a> <br> <br> <input type="button" name="Print" value="Print"
 				onclick="window.print()"
 				style="color: #06F7E9; background-color: black; height: 25px; width: 147px" />
-			<br>
-			<br>
+			<br> <br>
 		</div>
 		<%
 		int serialNumber = 0;
@@ -586,6 +584,10 @@ a {
 						href="<%=customerBaseURL%>/deleteCalculation/<%=calculation.getCalculationId()%>">
 							<input type="button" name="Delete" value="Delete"
 							style="color: #06F7E9; background-color: black; height: 30px; width: 60px" />
+					</a><a
+						href="<%=customerBaseURL%>/printCalculation/<%=serialNumber%>/<%=calculation.getCalculationId()%>/">
+							<input type="button" name="Print" value="Print"
+							style="color: #06F7E9; background-color: black; height: 30px; width: 60px" />
 					</a></td>
 				</tr>
 			</table>
@@ -603,6 +605,96 @@ a {
 		%>
 
 		<%
+		} else if (session.getAttribute("dashboardRequest") != null && session.getAttribute("adminDashboardView") != null
+				&& session.getAttribute("customerDashboardView") != null
+				&& session.getAttribute("dashboardRequest").equals("customer")
+				&& session.getAttribute("customerDashboardView").equals("printCalculation")) {
+
+		Calculation calculation = (Calculation) session.getAttribute("calculation");
+		%>
+		<div>
+			<table id="tableStyle2">
+				<tr>
+					<td><strong>Serial Number</strong></td>
+					<td>${serialNumber}</td>
+				</tr>
+				<tr>
+					<td><strong>Policy Id</strong></td>
+					<td><%=calculation.getPolicyId()%></td>
+				</tr>
+				<tr>
+					<td><strong>Policy Name</strong></td>
+					<td><%=calculation.getPolicyName()%></td>
+				</tr>
+				<tr>
+					<td><strong>Policy Type</strong></td>
+					<td><%=calculation.getPolicyType()%></td>
+				</tr>
+				<tr>
+					<td><strong>Period of Coverage</strong></td>
+					<td><%=calculation.getPeriodOfCoverage()%></td>
+				</tr>
+				<tr>
+					<td><strong>Premium Amount</strong></td>
+					<td><%=calculation.getPremiumAmount()%></td>
+				</tr>
+				<tr>
+					<td><strong style="color: #11908E;">Policy Price INR</strong></td>
+					<td><%=calculation.getPrice()%></td>
+				</tr>
+				<%
+				if (calculation.getPolicyType().equals("Life Insurance") || calculation.getPolicyType().equals("Medical Insurance")) {
+				%>
+				<tr>
+					<td><strong>Person Stage</strong></td>
+					<td><%=calculation.getPersonStage()%></td>
+				</tr>
+				<tr>
+					<td><strong>Does the person Smoke?</strong></td>
+					<td><%=calculation.getPersonSmokes()%></td>
+				</tr>
+				<tr>
+					<td><strong>Does the person Drink?</strong></td>
+					<td><%=calculation.getPersonDrinks()%></td>
+				</tr>
+				<tr>
+					<td><strong>Does the person has any serious disease?</strong></td>
+					<td><%=calculation.getPersonHasSeriousDisease()%></td>
+				</tr>
+				<%
+				}
+				%>
+				<%
+				if (calculation.getPolicyType().equals("Vehicle Insurance")) {
+				%>
+				<tr>
+					<td><strong>Vehicle Type</strong></td>
+					<td><%=calculation.getVehicleType()%></td>
+				</tr>
+				<tr>
+					<td><strong>Vehicle Price</strong></td>
+					<td><%=calculation.getVehiclePrice()%></td>
+				</tr>
+				<tr>
+					<td><strong>Vehicle Age</strong></td>
+					<td><%=calculation.getVehicleAge()%></td>
+				</tr>
+				<%
+				}
+				%>
+				<tr>
+					<td><strong style="color: #AB1494;">Final Price INR</strong></td>
+					<td><%=calculation.getFinalPrice()%></td>
+				</tr>
+				<tr>
+					<td><input type="button" name="Print" value="Print"
+						onclick="window.print()"
+						style="color: #06F7E9; background-color: black; height: 30px; width: 60px" />
+					</td>
+				</tr>
+			</table>
+		</div>
+		<%
 		}
 		%>
 		<div style="text-align: center">
@@ -612,3 +704,14 @@ a {
 
 </body>
 </html>
+
+
+
+
+
+
+
+
+
+
+

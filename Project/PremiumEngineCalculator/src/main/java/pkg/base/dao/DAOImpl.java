@@ -6,6 +6,8 @@ import java.util.UUID;
 import javax.transaction.Transactional;
 
 import org.hibernate.Criteria;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.orm.hibernate5.HibernateTemplate;
@@ -90,11 +92,13 @@ public class DAOImpl implements DAO {
 	@SuppressWarnings({ "unchecked", "deprecation" })
 	@Override
 	public List<InsurancePolicy> getInsurancePolicyByPolicyName(String policyName) {
-		Criteria criteria = hibernateTemplate.getSessionFactory().openSession().createCriteria(InsurancePolicy.class);
-		criteria.add(Restrictions.eq("policyName", policyName));
-		criteria.setFirstResult(0);
-		criteria.setMaxResults(1);
-		return criteria.list();
+		SessionFactory sessionFactory = hibernateTemplate.getSessionFactory();
+				Session session = sessionFactory.openSession(); 
+			Criteria criteria = session.createCriteria(InsurancePolicy.class);
+			criteria.add(Restrictions.eq("policyName", policyName));
+			criteria.setFirstResult(0);
+			criteria.setMaxResults(1);
+			return criteria.list();
 	}
 
 	// Get all policies.

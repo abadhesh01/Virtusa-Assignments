@@ -1,6 +1,6 @@
 package pkg.base.controller;
 
-import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.Base64;
 import java.util.Date;
@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -141,8 +142,7 @@ public class HomeController {
 	// Customer Sign up.
 	@PostMapping(path = "/customer/signup")
 	public String customerSignup(@ModelAttribute("signup") @Valid Signup signup, BindingResult errors,
-			@ModelAttribute("login") Login login, Model model, HttpSession session)
-			throws UnsupportedEncodingException {
+			@ModelAttribute("login") Login login, Model model, HttpSession session) {
 
 		logger.trace("\n\n\n\nSession Id[" + new Throwable().getStackTrace()[0].getMethodName() + "]: "
 				+ session.getId() + "\nSession Creation Time: " + session.getCreationTime() + "\n\n\n");
@@ -158,7 +158,8 @@ public class HomeController {
 			return "signup";
 		}
 
-		signup.setConfirmPassword(Base64.getEncoder().encodeToString(signup.getConfirmPassword().getBytes("UTF-8")));
+		signup.setConfirmPassword(
+				Base64.getEncoder().encodeToString(signup.getConfirmPassword().getBytes(StandardCharsets.UTF_8)));
 		signup.setNewPassword(signup.getConfirmPassword());
 		String result = homeService.validateCustomerSignup(signup);
 		if (!result.equals(signup.getUsername())) {
@@ -175,8 +176,7 @@ public class HomeController {
 	// Admin sign up.
 	@PostMapping(path = "/admin/signup")
 	public String adminSignup(@ModelAttribute("signup") @Valid Signup signup, BindingResult errors,
-			@ModelAttribute("login") Login login, Model model, HttpSession session)
-			throws UnsupportedEncodingException {
+			@ModelAttribute("login") Login login, Model model, HttpSession session) {
 
 		logger.trace("\n\n\n\nSession Id[" + new Throwable().getStackTrace()[0].getMethodName() + "]: "
 				+ session.getId() + "\nSession Creation Time: " + session.getCreationTime() + "\n\n\n");
@@ -192,7 +192,8 @@ public class HomeController {
 			return "signup";
 		}
 
-		signup.setConfirmPassword(Base64.getEncoder().encodeToString(signup.getConfirmPassword().getBytes("UTF-8")));
+		signup.setConfirmPassword(
+				Base64.getEncoder().encodeToString(signup.getConfirmPassword().getBytes(StandardCharsets.UTF_8)));
 		signup.setNewPassword(signup.getConfirmPassword());
 		String result = homeService.validateAdminSignup(signup);
 		if (!result.equals(signup.getUsername())) {
@@ -209,8 +210,7 @@ public class HomeController {
 	// Display customer's dashboard.
 	@PostMapping(path = "/customer/dashboard")
 	public String customerDashboard(@ModelAttribute("login") @Valid Login login, BindingResult errors,
-			@ModelAttribute("policy") InsurancePolicyModel policyModel, Model model, HttpSession session)
-			throws UnsupportedEncodingException {
+			@ModelAttribute("policy") InsurancePolicyModel policyModel, Model model, HttpSession session) {
 
 		logger.trace("\n\n\n\nSession Id[" + new Throwable().getStackTrace()[0].getMethodName() + "]: "
 				+ session.getId() + "\nSession Creation Time: " + session.getCreationTime() + "\n\n\n");
@@ -220,7 +220,7 @@ public class HomeController {
 			return "login";
 		}
 
-		login.setPassword(Base64.getEncoder().encodeToString(login.getPassword().getBytes("UTF-8")));
+		login.setPassword(Base64.getEncoder().encodeToString(login.getPassword().getBytes(StandardCharsets.UTF_8)));
 		String result = homeService.validateCustomerLogin(login);
 
 		if (!result.equals(login.getUsername())) {
@@ -248,8 +248,7 @@ public class HomeController {
 	// Display admin's dashboard.
 	@PostMapping(path = "/admin/dashboard")
 	public String adminDashboard(@ModelAttribute("login") @Valid Login login, BindingResult errors,
-			@ModelAttribute("policy") InsurancePolicyModel policyModel, Model model, HttpSession session)
-			throws UnsupportedEncodingException {
+			@ModelAttribute("policy") InsurancePolicyModel policyModel, Model model, HttpSession session) {
 
 		logger.trace("\n\n\n\nSession Id[" + new Throwable().getStackTrace()[0].getMethodName() + "]: "
 				+ session.getId() + "\nSession Creation Time: " + session.getCreationTime() + "\n\n\n");
@@ -259,7 +258,7 @@ public class HomeController {
 			return "login";
 		}
 
-		login.setPassword(Base64.getEncoder().encodeToString(login.getPassword().getBytes("UTF-8")));
+		login.setPassword(Base64.getEncoder().encodeToString(login.getPassword().getBytes(StandardCharsets.UTF_8)));
 		String result = homeService.validateAdminLogin(login);
 
 		if (!result.equals(login.getUsername())) {
@@ -359,7 +358,7 @@ public class HomeController {
 			return "login";
 		}
 
-		String result[] = homeService.deleteInsurancePolicyById(policyId);
+		String[] result = homeService.deleteInsurancePolicyById(policyId);
 		adminDashboardModel(model, ((Login) (session.getAttribute("loggedAdmin"))).getUsername());
 		session.setAttribute("dashboardRequest", "admin");
 		session.setAttribute("adminDashboardView", "default");
@@ -569,6 +568,38 @@ public class HomeController {
 		return calculationListConfig(model, session);
 	}
 
+	// Print specific calculation.
+	@GetMapping("/customer/printCalculation/{serialNumber}/{calculationId}")
+	public String printCalculation(@PathVariable("serialNumber") int serialNumber,
+			@PathVariable("calculationId") UUID calculationId,
+			@ModelAttribute("policy") InsurancePolicyModel insurancePolicyModel, @ModelAttribute("login") Login login,
+			Model model, HttpSession session) {
+
+		logger.trace("\n\n\n\nSession Id[" + new Throwable().getStackTrace()[0].getMethodName() + "]: "
+				+ session.getId() + "\nSession Creation Time: " + session.getCreationTime() + "\n\n\n");
+
+		if (session.getAttribute("loggedCustomer") == null) {
+			customerLoginModel(model);
+			return "login";
+		}
+
+		Calculation calculation = homeService.getCalculationById(calculationId);
+
+		if (calculation == null) {
+			String dashboard = calculationListConfig(model, session);
+			model.addAttribute("dashboardMessageBar", "Calculation with id=\"" + calculationId + "\" was not found!");
+			model.addAttribute("dashboardMessageBarColor", "red");
+			return dashboard;
+		}
+
+		session.setAttribute("dashboardRequest", "customer");
+		session.setAttribute("customerDashboardView", "printCalculation");
+		session.setAttribute("calculation", calculation);
+		model.addAttribute("serialNumber", serialNumber);
+		customerDashboardModel(model, ((Login) session.getAttribute("loggedCustomer")).getUsername());
+		return "dashboard";
+	}
+
 	// Delete a customer's calculation by it's id.
 	@GetMapping("/customer/deleteCalculation/{calculationId}")
 	public String deleteCalculation(@PathVariable("calculationId") UUID calculationId,
@@ -615,6 +646,16 @@ public class HomeController {
 
 		homeService.deleteAllCalculationsByUserName(((Login) session.getAttribute("loggedCustomer")).getUsername());
 		return calculationListConfig(model, session);
+	}
+
+	// Global exception handler
+	@ExceptionHandler(value = Exception.class)
+	public String globalExceptionHandler(Model model, HttpSession session, Exception exception) {
+		logger.trace("\n\n\n\nSession Id[" + new Throwable().getStackTrace()[0].getMethodName() + "]: "
+				+ session.getId() + "\nSession Creation Time: " + session.getCreationTime() + "\n\n\n");
+
+		model.addAttribute("errorMessage", exception.getMessage());
+		return "error";
 	}
 
 	public String calculationListConfig(Model model, HttpSession session) {
