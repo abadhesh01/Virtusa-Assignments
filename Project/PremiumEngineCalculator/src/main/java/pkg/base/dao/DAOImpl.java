@@ -93,12 +93,12 @@ public class DAOImpl implements DAO {
 	@Override
 	public List<InsurancePolicy> getInsurancePolicyByPolicyName(String policyName) {
 		SessionFactory sessionFactory = hibernateTemplate.getSessionFactory();
-				Session session = sessionFactory.openSession(); 
-			Criteria criteria = session.createCriteria(InsurancePolicy.class);
-			criteria.add(Restrictions.eq("policyName", policyName));
-			criteria.setFirstResult(0);
-			criteria.setMaxResults(1);
-			return criteria.list();
+		Session session = sessionFactory.openSession();
+		Criteria criteria = session.createCriteria(InsurancePolicy.class);
+		criteria.add(Restrictions.eq("policyName", policyName));
+		criteria.setFirstResult(0);
+		criteria.setMaxResults(1);
+		return criteria.list();
 	}
 
 	// Get all policies.

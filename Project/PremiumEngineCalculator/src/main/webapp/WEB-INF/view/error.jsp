@@ -28,7 +28,7 @@
 			<strong style="font-size: 20px; color: #9E0DCC"> <a
 				href="/PremiumEngineCalculator/home/customer/login">Return
 					to customer home</a> <br> <br> <a
-				href="http://localhost:9090/PremiumEngineCalculator/home/admin/login">Return
+				href="/PremiumEngineCalculator/home/admin/login">Return
 					to admin home</a>
 			</strong>
 		</div>

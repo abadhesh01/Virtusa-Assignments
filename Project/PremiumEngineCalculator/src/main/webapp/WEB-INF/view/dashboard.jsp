@@ -105,7 +105,7 @@ a {
 
 	<%
 	String customerBaseURL = "/PremiumEngineCalculator/home/customer";
-	String adminBaseURL = "http://localhost:9090/PremiumEngineCalculator/home/admin";
+	String adminBaseURL = "/PremiumEngineCalculator/home/admin";
 	%>
 
 	<section>
@@ -122,6 +122,9 @@ a {
 					<li style="display: inline; float: center; padding: 8px;"><a
 						href="<%=adminBaseURL%>/addNewPolicy" style="color: white;"><strong>Add
 								new policy</strong></a></li>
+					<li style="display: inline; float: center; padding: 8px;"><a
+						href="<%=adminBaseURL%>/signup/page" style="color: white;"><strong>Create
+								new admin account</strong></a></li>			
 					<%
 					}
 					%>

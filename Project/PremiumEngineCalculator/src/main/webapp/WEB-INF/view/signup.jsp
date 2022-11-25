@@ -43,9 +43,22 @@
 					<tr>
 						<td align="left"><form:button id="signUpUser"
 								style="color: #06F7E9; background-color: black; height: 30px; width: 200px">SignUp</form:button></td>
+						<%
+						if (session.getAttribute("disableLogin") != null && session.getAttribute("disableLogin").equals("false")) {
+						%>
 						<td align="right"><a href="${onLogin}"><input
 								type="button" value="LogIn" id="loginUser"
 								style="color: #06F7E9; background-color: black; height: 30px; width: 200px" /></a></td>
+						<%
+						} else {
+						%>
+						<td align="right"><a
+							href="/PremiumEngineCalculator/home/admin/showAllPolicies"><input
+								type="button" value="Show all policies"
+								style="color: #06F7E9; background-color: black; height: 30px; width: 200px" /></a></td>
+						<%
+						}
+						%>
 					</tr>
 				</table>
 				<br>
